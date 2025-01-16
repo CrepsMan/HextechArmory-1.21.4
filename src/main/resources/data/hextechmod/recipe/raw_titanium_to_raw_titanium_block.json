@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "pattern": [
+        "hhh",
+        "hhh",
+        "hhh"
+    ],
+    "key": {
+        "h": "hextechmod:raw_titanium"
+    },
+    "result": {
+        "id": "hextechmod:raw_titanium_block",
+        "count": 1
+    },
+    "group": "titanium"
+}

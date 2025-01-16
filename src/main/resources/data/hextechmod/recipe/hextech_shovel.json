@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " P ",
+    " S ",
+    " S "
+  ],
+  "key": {
+    "X": {
+      "item": "hextechmod:hextech_crystal"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "P": {
+      "item": "hextechmod:Pure_Iron"
+    }
+  },
+  "result": {
+    "item": "hextechmod:hextech_axe",
+    "count": 1
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "item.hextechmod.hextech_axe": "Hextech Axe",
+  "item.hextechmod.hextech_pickaxe": "Hextech Pickaxe",
+  "item.hextechmod.hextech_shovel": "Hextech Shovel",
+  "item.hextechmod.hextech_gauntlets": "Hextech Gauntlets",
+  "item.hextechmod.hextech_hammer": "Hextech Hammer",
+  "item.hextechmod.hextech_sniper_rifle": "Hextech Sniper Rifle",
+  "item.hextechmod.hextech_armor_helmet": "Hextech Helmet",
+  "item.hextechmod.hextech_armor_chestplate": "Hextech Chestplate",
+  "item.hextechmod.hextech_armor_leggings": "Hextech Leggings",
+  "item.hextechmod.hextech_armor_boots": "Hextech Boots",
+  "item.hextechmod.titanium_ingot": "Titanium Ingot",
+  "item.hextechmod.raw_titanium": "Raw Titanium",
+  "item.hextechmod.hextech_handle": "Hextech Handle",
+  "item.hextechmod.hextech_hammer_head": "Hextech Hammer Head",
+  "item.hextechmod.hextech_hammer_combiner_smithing_template": "Hextech Hammer Combiner Smithing Template",
+
+  "item.hextechmod.smithing_template.hextech_combiner.additions_slot_description": "Hextech Hammer Head",
+  "item.hextechmod.smithing_template.hextech_combiner.base_slot_description": "Hextech Handle",
+  "item.hextechmod.smithing_template.hextech_combiner.ingredients": "Hextech Hammer Head",
+  "item.hextechmod.smithing_template.hextech_combiner.applies_to": "Hextech Handle",
+
+  "item.hextechmod.raw_titanium_block": "Raw Titanium Block",
+  "item.hextechmod.titanium_block": "Titanium Block",
+  "item.hextechmod.titanium_ore_block": "Titanium Ore Block",
+  "item.hextechmod.titanium_deepslate_ore_block": "Titanium Deepslate Ore Block",
+
+  "itemgroup.hextechmod.hextech_blocks": "Hextech Blocks",
+  "itemgroup.hextechmod.hextech_items": "Hextech Items",
+
+  "itemGroup.hextechmod": "Hextech"
+}

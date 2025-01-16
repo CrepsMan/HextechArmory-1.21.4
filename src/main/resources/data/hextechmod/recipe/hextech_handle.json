@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " #/",
+    "#/#",
+    "/# "
+  ],
+  "key": {
+    "#":"minecraft:rabbit_hide",
+    "/": "minecraft:stick"
+  },
+  "result": {
+    "id": "hextechmod:hextech_handle",
+    "count": 1
+  },
+  "group": "Hextech"
+}

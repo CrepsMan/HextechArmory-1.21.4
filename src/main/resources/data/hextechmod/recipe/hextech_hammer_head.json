@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###",
+        "#h#",
+        "   "
+    ],
+    "key": {
+        "#": "hextechmod:titanium_block",
+        "h": "hextechmod:titanium_ingot"
+    },
+    "result": {
+        "id": "hextechmod:hextech_hammer_head",
+        "count": 1
+    },
+    "group": "Hextech"
+}

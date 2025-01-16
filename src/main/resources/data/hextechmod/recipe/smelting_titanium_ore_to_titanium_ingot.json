@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": "hextechmod:titanium_ore_block",
+  "result": {
+    "id": "hextechmod:titanium_ingot"
+  },
+  "experience": 4,
+  "cookingtime": 400,
+  "group": "titanium"
+}

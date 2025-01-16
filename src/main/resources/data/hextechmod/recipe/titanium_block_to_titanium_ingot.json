@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "category": "misc",
+    "group": "titanium",
+    "ingredients": [
+        "hextechmod:titanium_block"
+    ],
+    "result": {
+        "count": 9,
+        "id": "hextechmod:titanium_ingot"
+    }
+}
