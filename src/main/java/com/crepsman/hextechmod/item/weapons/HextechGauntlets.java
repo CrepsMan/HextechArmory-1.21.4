@@ -1,19 +1,23 @@
 package com.crepsman.hextechmod.item.weapons;
 
+import com.crepsman.hextechmod.HextechMod;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.MiningToolItem;
+import net.minecraft.item.*;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class HextechGauntlets extends Item {
@@ -21,12 +25,10 @@ public class HextechGauntlets extends Item {
     private float attackSpeed = 0;
     private boolean blocking;
 
-    public HextechGauntlets( Settings settings) {
+    public HextechGauntlets(Settings settings) {
         super(settings);
         this.blocking = false;
     }
-
-
 
     @Override
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
@@ -43,61 +45,61 @@ public class HextechGauntlets extends Item {
 
     public static boolean isWornInOffhand(PlayerEntity player) {
         ItemStack offhandStack = player.getStackInHand(Hand.OFF_HAND);
-        return offhandStack.getItem() instanceof HextechGauntlets;
+        boolean isWorn = offhandStack.getItem() instanceof HextechGauntlets;
+        HextechMod.LOGGER.info("isWornInOffhand: " + isWorn);
+        return isWorn;
     }
 
     public static void enhancePickaxe(PlayerEntity player, World world, BlockPos pos, Direction side) {
+        HextechMod.LOGGER.info("enhancePickaxe called");
         if (isWornInOffhand(player)) {
             ItemStack mainHandStack = player.getStackInHand(Hand.MAIN_HAND);
-            if (mainHandStack.getItem() instanceof MiningToolItem) {
-                mine3x3(world, pos, side, player, Hand.MAIN_HAND);
-
-                // Simulate vein mining
-                BlockState state = world.getBlockState(pos);
-                if (isOreBlock(state)) {
-                    mineVein(world, pos, player, Hand.MAIN_HAND, new HashSet<>());
-                }
+            HextechMod.LOGGER.info("Main hand item: " + mainHandStack.getItem());
+            if (mainHandStack.getItem() == Items.DIAMOND_PICKAXE || mainHandStack.getItem() == Items.NETHERITE_PICKAXE) {
+                HextechMod.LOGGER.info("Enhancing pickaxe");
+                List<BlockPos> blocksToBeDestroyed = getBlocksToBeDestroyed(1, pos, (ServerPlayerEntity) player);
+                HextechMod.LOGGER.info("Blocks to be destroyed: " + blocksToBeDestroyed.size());
+                blocksToBeDestroyed.forEach(blockPos -> {
+                    HextechMod.LOGGER.info("Breaking block at: " + blockPos);
+                    boolean success = world.breakBlock(blockPos, true, player);
+                    HextechMod.LOGGER.info("Block broken: " + success);
+                });
             }
         }
     }
 
-    private static void mine3x3(World world, BlockPos pos, Direction side, PlayerEntity player, Hand hand) {
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                for (int dz = -1; dz <= 1; dz++) {
-                    BlockPos targetPos = pos.add(dx, dy, dz);
-                    BlockState targetState = world.getBlockState(targetPos);
-                    if (targetState.isIn(BlockTags.PICKAXE_MINEABLE)) {
-                        world.breakBlock(targetPos, true, player);
+    public static List<BlockPos> getBlocksToBeDestroyed(int range, BlockPos initialBlockPos, ServerPlayerEntity player) {
+        List<BlockPos> positions = new ArrayList<>();
+        HitResult hit = player.raycast(20, 0, false);
+        if (hit.getType() == HitResult.Type.BLOCK) {
+            BlockHitResult blockHit = (BlockHitResult) hit;
+
+            if (blockHit.getSide() == Direction.DOWN || blockHit.getSide() == Direction.UP) {
+                for (int x = -range; x <= range; x++) {
+                    for (int y = -range; y <= range; y++) {
+                        positions.add(new BlockPos(initialBlockPos.getX() + x, initialBlockPos.getY(), initialBlockPos.getZ() + y));
+                    }
+                }
+            }
+
+            if (blockHit.getSide() == Direction.NORTH || blockHit.getSide() == Direction.SOUTH) {
+                for (int x = -range; x <= range; x++) {
+                    for (int y = -range; y <= range; y++) {
+                        positions.add(new BlockPos(initialBlockPos.getX() + x, initialBlockPos.getY() + y, initialBlockPos.getZ()));
+                    }
+                }
+            }
+
+            if (blockHit.getSide() == Direction.EAST || blockHit.getSide() == Direction.WEST) {
+                for (int x = -range; x <= range; x++) {
+                    for (int y = -range; y <= range; y++) {
+                        positions.add(new BlockPos(initialBlockPos.getX(), initialBlockPos.getY() + y, initialBlockPos.getZ() + x));
                     }
                 }
             }
         }
-    }
 
-    private static void mineVein(World world, BlockPos pos, PlayerEntity player, Hand hand, Set<BlockPos> visited) {
-        if (visited.contains(pos)) {
-            return;
-        }
-
-        visited.add(pos);
-        BlockState state = world.getBlockState(pos);
-        if (isOreBlock(state)) {
-            world.breakBlock(pos, true, player);
-            for (BlockPos offset : BlockPos.iterate(pos.add(-1, -1, -1), pos.add(1, 1, 1))) {
-                mineVein(world, offset, player, hand, visited);
-            }
-        }
-    }
-
-    private static boolean isOreBlock(BlockState state) {
-        return state.isIn(BlockTags.IRON_ORES) ||
-                state.isIn(BlockTags.DIAMOND_ORES) ||
-                state.isIn(BlockTags.REDSTONE_ORES) ||
-                state.isIn(BlockTags.LAPIS_ORES) ||
-                state.isIn(BlockTags.COAL_ORES) ||
-                state.isIn(BlockTags.EMERALD_ORES) ||
-                state.isIn(BlockTags.COPPER_ORES);
+        return positions;
     }
 
     public float getAttackSpeed() {

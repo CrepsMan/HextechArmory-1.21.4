@@ -30,7 +30,7 @@ public class ModConfiguredFeatures {
                 List.of(OreFeatureConfig.createTarget(stoneReplaceables, ModBlocks.TITANIUM_ORE_BLOCK.getDefaultState()),
                         OreFeatureConfig.createTarget(deepslateReplaceables, ModBlocks.TITANIUM_DEEPSLATE_ORE_BLOCK.getDefaultState()));
 
-        register(context, TITANIUM_ORE_BLOCK_KEY, Feature.ORE, new OreFeatureConfig(overworldTitaniumOres, 2));
+        register(context, TITANIUM_ORE_BLOCK_KEY, Feature.ORE, new OreFeatureConfig(overworldTitaniumOres, 4, 0.5F));
     }
 
     public static RegistryKey<ConfiguredFeature<?, ?>> registerKey(String name) {

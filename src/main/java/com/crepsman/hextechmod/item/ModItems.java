@@ -3,15 +3,12 @@ package com.crepsman.hextechmod.item;
 
 import com.crepsman.hextechmod.HextechMod;
 import com.crepsman.hextechmod.item.armor.HextechArmor;
-import com.crepsman.hextechmod.item.equipment.ModArmorMaterials;
-import com.crepsman.hextechmod.item.materials.ModToolMaterials;
+import com.crepsman.hextechmod.item.ModArmorMaterials;
 import com.crepsman.hextechmod.item.smithing_templates.HextechHammerCombinerSmithingTemplateItem;
 import com.crepsman.hextechmod.item.weapons.HextechGauntlets;
 import com.crepsman.hextechmod.item.weapons.HextechHammer;
 import com.crepsman.hextechmod.item.weapons.HextechSniperRifle;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.*;
 import net.minecraft.item.equipment.EquipmentType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -40,10 +37,25 @@ public class ModItems {
     public static final Item HEXTECH_HAMMER_COMBINER_SMITHING_TEMPLATE =registerItem("hextech_hammer_combiner_smithing_template", HextechHammerCombinerSmithingTemplateItem::createNetheriteUpgrade, (new Item.Settings().fireproof().rarity(Rarity.UNCOMMON)));
 
     // Armor
-    public static final Item HEXTECH_ARMOR_BOOTS = registerItem("hextech_boots", settings -> new HextechArmor(ModArmorMaterials.HEXTECH, EquipmentType.BOOTS, settings), new Item.Settings().fireproof());
-    public static final Item HEXTECH_ARMOR_LEGGINGS = registerItem("hextech_leggings", settings -> new HextechArmor(ModArmorMaterials.HEXTECH, EquipmentType.LEGGINGS, settings), new Item.Settings().fireproof());
-    public static final Item HEXTECH_ARMOR_CHESTPLATE = registerItem("hextech_chestplate", settings -> new HextechArmor(ModArmorMaterials.HEXTECH, EquipmentType.CHESTPLATE, settings), new Item.Settings().fireproof());
-    public static final Item HEXTECH_ARMOR_HELMET = registerItem("hextech_helmet", settings -> new HextechArmor(ModArmorMaterials.HEXTECH, EquipmentType.HELMET, settings), new Item.Settings().fireproof());
+    public static final Identifier HEXTECH_ARMOR_PATH = Identifier.of(HextechMod.MOD_ID, "hextech");
+
+    public static final Item HEXTECH_HELMET = Items.register(of("hextech_helmet"), settings -> new ArmorItem(
+            ModArmorMaterials.HEXTECH, EquipmentType.HELMET, settings), new Item.Settings().maxCount(1).fireproof().maxDamage(ModArmorMaterials.HEXTECH.durability())
+            .registryKey(RegistryKey.of(RegistryKeys.ITEM, HEXTECH_ARMOR_PATH)));
+
+    public static final Item HEXTECH_CHESTPLATE = Items.register(of("hextech_chestplate"), settings -> new ArmorItem(
+            ModArmorMaterials.HEXTECH, EquipmentType.CHESTPLATE, settings), new Item.Settings().maxCount(1).fireproof().maxDamage(ModArmorMaterials.HEXTECH.durability())
+            .registryKey(RegistryKey.of(RegistryKeys.ITEM, HEXTECH_ARMOR_PATH)));
+
+    public static final Item HEXTECH_LEGGINGS = Items.register(of("hextech_leggings"), settings -> new ArmorItem(
+            ModArmorMaterials.HEXTECH, EquipmentType.LEGGINGS, settings), new Item.Settings().maxCount(1).fireproof().maxDamage(ModArmorMaterials.HEXTECH.durability())
+            .registryKey(RegistryKey.of(RegistryKeys.ITEM, HEXTECH_ARMOR_PATH)));
+
+    public static final Item HEXTECH_BOOTS = Items.register(of("hextech_boots"), settings -> new ArmorItem(
+            ModArmorMaterials.HEXTECH, EquipmentType.BOOTS, settings), new Item.Settings().maxCount(1).fireproof().maxDamage(ModArmorMaterials.HEXTECH.durability())
+            .registryKey(RegistryKey.of(RegistryKeys.ITEM, HEXTECH_ARMOR_PATH)));
+
+
 
     public static Item registerItem(String id, Function<Item.Settings, Item> factory, Item.Settings settings) {
         RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(HextechMod.MOD_ID, id));
@@ -52,6 +64,10 @@ public class ModItems {
             blockItem.appendBlocks(Item.BLOCK_ITEMS, item);
         }
         return Registry.register(Registries.ITEM, key, item);
+    }
+
+    public static RegistryKey<Item> of(String id) {
+        return RegistryKey.of(RegistryKeys.ITEM, Identifier.of(HextechMod.MOD_ID, id));
     }
 
     public static void registerModItem() {

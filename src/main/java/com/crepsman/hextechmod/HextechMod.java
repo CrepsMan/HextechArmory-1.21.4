@@ -4,9 +4,12 @@ import com.crepsman.hextechmod.block.ModBlocks;
 import com.crepsman.hextechmod.block.entity.ModBlockEntities;
 import com.crepsman.hextechmod.item.ModItemGroups;
 import com.crepsman.hextechmod.item.ModItems;
+import com.crepsman.hextechmod.util.GauntlestsUsageEvent;
+import com.crepsman.hextechmod.util.ModTags;
 import com.crepsman.hextechmod.world.gen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,5 +28,8 @@ public class HextechMod implements ModInitializer {
 		ModBlocks.registerModBlock();
 		ModItemGroups.registerItemGroups();
 		ModWorldGeneration.generateModWorldGen();
+		ModTags.init();
+
+		PlayerBlockBreakEvents.BEFORE.register(new GauntlestsUsageEvent());
 	}
 }
