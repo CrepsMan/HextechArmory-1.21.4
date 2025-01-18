@@ -28,6 +28,10 @@ public class ModItemGroups {
                         entries.add(ModItems.HEXTECH_HANDLE);
                         entries.add(ModItems.HEXTECH_HAMMER_HEAD);
                         entries.add(ModItems.HEXTECH_HAMMER_COMBINER_SMITHING_TEMPLATE);
+                        entries.add(ModItems.HEXTECH_HELMET);
+                        entries.add(ModItems.HEXTECH_CHESTPLATE);
+                        entries.add(ModItems.HEXTECH_LEGGINGS);
+                        entries.add(ModItems.HEXTECH_BOOTS);
 
                     }).build());
 

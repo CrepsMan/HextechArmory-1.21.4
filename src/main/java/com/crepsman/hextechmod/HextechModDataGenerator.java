@@ -1,11 +1,8 @@
 package com.crepsman.hextechmod;
 
-import com.crepsman.hextechmod.datagen.ModBlockTagProvider;
-import com.crepsman.hextechmod.datagen.ModLootTableProvider;
-import com.crepsman.hextechmod.datagen.ModModelProvider;
+import com.crepsman.hextechmod.datagen.*;
 import com.crepsman.hextechmod.world.ModConfiguredFeatures;
 import com.crepsman.hextechmod.world.ModPlacedFeatures;
-import com.crepsman.hextechmod.datagen.ModRegistryDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.registry.RegistryBuilder;
@@ -20,6 +17,7 @@ public class HextechModDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(ModLootTableProvider::new);
 		pack.addProvider(ModModelProvider::new);
 		pack.addProvider(ModRegistryDataGenerator::new);
+		pack.addProvider(ModItemTagProvider::new);
 	}
 
 	@Override
