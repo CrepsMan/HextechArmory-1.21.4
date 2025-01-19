@@ -22,6 +22,6 @@ public interface ModArmorMaterials {
             map.put(EquipmentType.BOOTS, 4);
             map.put(EquipmentType.BODY,12);
 
-    }), 40, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 4F, 0.2F, ModTags.HEXTECH_ARMOR_MATERIALS,
+    }), 40, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 3F, 0.2F, ModTags.HEXTECH_ARMOR_MATERIALS,
             RegistryKey.of(RegistryKey.ofRegistry(Identifier.ofVanilla("equipment_asset")), Identifier.of(HextechMod.MOD_ID, "hextech")));
 }
