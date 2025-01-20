@@ -22,7 +22,6 @@ public class ModItemGroups {
                         // Add your custom items here
                         entries.add(ModItems.HEXTECH_GAUNTLETS);
                         entries.add(ModItems.HEXTECH_HAMMER);
-                        entries.add(ModItems.HEXTECH_SNIPER_RIFLE);
                         entries.add(ModItems.TITANIUM_INGOT);
                         entries.add(ModItems.RAW_TITANIUM);
                         entries.add(ModItems.HEXTECH_HANDLE);
@@ -32,6 +31,9 @@ public class ModItemGroups {
                         entries.add(ModItems.HEXTECH_CHESTPLATE);
                         entries.add(ModItems.HEXTECH_LEGGINGS);
                         entries.add(ModItems.HEXTECH_BOOTS);
+                        entries.add(ModItems.UNREFINED_HEXTECH_CRYSTAL);
+                        entries.add(ModItems.HEXTECH_CRYSTAL);
+                        entries.add(ModItems.UNREFINED_HEXTECH_CRYSTAL_SHARD);
 
                     }).build());
 

@@ -29,7 +29,7 @@ public class HextechMod implements ModInitializer {
 		ModItemGroups.registerItemGroups();
 		ModWorldGeneration.generateModWorldGen();
 		ModTags.init();
-		GauntletsDamageHandler.register();
 		PlayerBlockBreakEvents.BEFORE.register(new GauntlestsUsageEvent());
+
 	}
 }

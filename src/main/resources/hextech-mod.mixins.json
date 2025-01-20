@@ -3,7 +3,8 @@
 	"package": "com.crepsman.hextechmod.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"ExampleMixin",
+		"BeaconBlockEntityMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

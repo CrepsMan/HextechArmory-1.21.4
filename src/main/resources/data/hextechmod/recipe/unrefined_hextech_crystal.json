@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " h ",
+    "h#h",
+    " h "
+  ],
+  "key": {
+    "#": "minecraft:heart_of_the_sea",
+    "h": "hextechmod:unrefined_hextech_crystal_shard"
+  },
+  "result": {
+    "id": "hextechmod:unrefined_hextech_crystal",
+    "count": 1
+  },
+  "group": "Hextech"
+}

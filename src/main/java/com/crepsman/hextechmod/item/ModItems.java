@@ -2,12 +2,9 @@ package com.crepsman.hextechmod.item;
 
 
 import com.crepsman.hextechmod.HextechMod;
-import com.crepsman.hextechmod.item.armor.HextechArmor;
-import com.crepsman.hextechmod.item.ModArmorMaterials;
 import com.crepsman.hextechmod.item.smithing_templates.HextechHammerCombinerSmithingTemplateItem;
 import com.crepsman.hextechmod.item.weapons.HextechGauntlets;
 import com.crepsman.hextechmod.item.weapons.HextechHammer;
-import com.crepsman.hextechmod.item.weapons.HextechSniperRifle;
 import net.minecraft.item.*;
 import net.minecraft.item.equipment.EquipmentType;
 import net.minecraft.registry.Registries;
@@ -24,7 +21,6 @@ public class ModItems {
     // Weapons
     public static final Item HEXTECH_GAUNTLETS = registerItem("hextech_gauntlets", HextechGauntlets::new, new Item.Settings().fireproof());
     public static final Item HEXTECH_HAMMER = registerItem("hextech_hammer", settings -> new HextechHammer(ToolMaterial.NETHERITE, 15.0F, -3.5F, settings), new Item.Settings().fireproof());
-    public static final Item HEXTECH_SNIPER_RIFLE = registerItem("hextech_sniper_rifle", HextechSniperRifle::new, new Item.Settings().fireproof());
 
     // Materials
     public static final Item TITANIUM_INGOT = registerItem("titanium_ingot", Item::new, new Item.Settings().fireproof());
@@ -55,6 +51,10 @@ public class ModItems {
     public static final Item HEXTECH_BOOTS = Items.register(of("hextech_boots"), settings -> new ArmorItem(
             ModArmorMaterials.HEXTECH, EquipmentType.BOOTS, settings), new Item.Settings().maxCount(1).fireproof().maxDamage(ModArmorMaterials.HEXTECH.durability())
             .registryKey(RegistryKey.of(RegistryKeys.ITEM, HEXTECH_ARMOR_PATH)));
+
+    public static final Item UNREFINED_HEXTECH_CRYSTAL = registerItem("unrefined_hextech_crystal", Item::new, new Item.Settings().fireproof());
+    public static final Item HEXTECH_CRYSTAL = registerItem("hextech_crystal", Item::new, new Item.Settings().fireproof());
+    public static final Item UNREFINED_HEXTECH_CRYSTAL_SHARD = registerItem("unrefined_hextech_crystal_shard", Item::new, new Item.Settings().fireproof());
 
 
 
