@@ -31,6 +31,9 @@ public class ModModelProvider extends FabricModelProvider {
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
         itemModelGenerator.register(ModItems.TITANIUM_INGOT, Models.GENERATED);
         itemModelGenerator.register(ModItems.RAW_TITANIUM, Models.GENERATED);
+        itemModelGenerator.register(ModItems.UNREFINED_HEXTECH_CRYSTAL, Models.GENERATED);
+        itemModelGenerator.register(ModItems.UNREFINED_HEXTECH_CRYSTAL_SHARD, Models.GENERATED);
+        itemModelGenerator.register(ModItems.HEXTECH_CRYSTAL, Models.GENERATED);
 
 
         itemModelGenerator.registerArmor(ModItems.HEXTECH_HELMET, RegistryKey.of(RegistryKey.ofRegistry(Identifier.ofVanilla("equipment_asset")), Identifier.of(HextechMod.MOD_ID, "hextech")),
