@@ -1,64 +1,48 @@
 package com.crepsman.hextechmod.item.weapons;
 
-import net.minecraft.block.Block;
+import com.crepsman.hextechmod.item.ModItems;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class HextechHammer extends MiningToolItem {
     private static final int MAX_BLOCKS = 150;
-    private static final Map<Block, Block> Exlode_Map =
-            Map.of(
-                    Blocks.DIRT,
-                    Blocks.SAND
-
-            );
+    private boolean isCrossbowMode = false;
 
     public HextechHammer(ToolMaterial material, float attackDamage, float attackSpeed, Settings settings) {
         super(material, BlockTags.AXE_MINEABLE, attackDamage, attackSpeed, settings);
     }
 
-
     @Override
     public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
-        System.out.println("postMine called"); // Debug statement
+        if (isCrossbowMode) {
+            return false; // Do not mine in crossbow mode
+        }
+
         if (!world.isClient && miner instanceof PlayerEntity && !miner.isSneaking() && state.isIn(BlockTags.LOGS)) {
-            System.out.println("Chopping tree"); // Debug statement
             chopTree(world, pos, (PlayerEntity) miner);
         }
         return super.postMine(stack, world, state, pos, miner);
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        World world = context.getWorld();
-        Block clickedBlock = world.getBlockState(context.getBlockPos()).getBlock();
-
-        if (Exlode_Map.containsKey(clickedBlock)) {
-            if (!world.isClient) {
-                explodeBlock(world, context);
-            }
-            return ActionResult.SUCCESS;
+    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        if (isCrossbowMode) {
+            return false; // Do not deal melee damage in crossbow mode
         }
-        return ActionResult.PASS;
-    }
-
-    private void explodeBlock(World world, ItemUsageContext context) {
-        BlockPos pos = context.getBlockPos();
-        world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), 4.0F, World.ExplosionSourceType.TNT);
+        return super.postHit(stack, target, attacker);
     }
 
     private void chopTree(World world, BlockPos pos, PlayerEntity player) {
@@ -67,23 +51,30 @@ public class HextechHammer extends MiningToolItem {
     }
 
     private void chopTreeRecursive(World world, BlockPos pos, PlayerEntity player, Set<BlockPos> visited, int blocksMined) {
+        if (blocksMined >= MAX_BLOCKS) {
+            return;
+        }
+
         visited.add(pos);
         BlockState state = world.getBlockState(pos);
-        Block block = state.getBlock();
 
-        System.out.println("Visiting: " + pos + " Block: " + block); // Debug statement
-
-        System.out.println("Breaking block at: " + pos); // Debug statement
-        world.breakBlock(pos, true, player);
-        blocksMined++;
+        if (state.isIn(BlockTags.LOGS)) {
+            world.breakBlock(pos, true, player);
+            blocksMined++;
+        }
 
         for (BlockPos offset : BlockPos.iterate(pos.add(-1, -1, -1), pos.add(1, 1, 1))) {
-            if (blocksMined >= MAX_BLOCKS) {
-                break;
-            }
-            if (!offset.equals(pos) && !visited.contains(offset) && (world.getBlockState(offset).isIn(BlockTags.LOGS) || world.getBlockState(offset).isIn(BlockTags.LEAVES))) {
-                chopTreeRecursive(world, offset, player, visited, blocksMined);
+            if (!offset.equals(pos) && !visited.contains(offset)) {
+                BlockState offsetState = world.getBlockState(offset);
+                if (offsetState.isIn(BlockTags.LOGS)) {
+                    chopTreeRecursive(world, offset, player, visited, blocksMined);
+                }
             }
         }
+    }
+
+    public void toggleCrossbowMode(PlayerEntity player) {
+        player.sendMessage(Text.literal("Hextech Hammer, blaster mode enabled"), true);
+        player.setStackInHand(Hand.MAIN_HAND, new ItemStack(ModItems.HEXTECH_HAMMER_BLASTER_MODE));
     }
 }

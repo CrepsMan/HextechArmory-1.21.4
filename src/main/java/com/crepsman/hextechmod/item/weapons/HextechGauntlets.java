@@ -46,23 +46,16 @@ public class HextechGauntlets extends Item {
     public static boolean isWornInOffhand(PlayerEntity player) {
         ItemStack offhandStack = player.getStackInHand(Hand.OFF_HAND);
         boolean isWorn = offhandStack.getItem() instanceof HextechGauntlets;
-        HextechMod.LOGGER.info("isWornInOffhand: " + isWorn);
         return isWorn;
     }
 
     public static void enhancePickaxe(PlayerEntity player, World world, BlockPos pos, Direction side) {
-        HextechMod.LOGGER.info("enhancePickaxe called");
         if (isWornInOffhand(player)) {
             ItemStack mainHandStack = player.getStackInHand(Hand.MAIN_HAND);
-            HextechMod.LOGGER.info("Main hand item: " + mainHandStack.getItem());
             if (mainHandStack.getItem() == Items.DIAMOND_PICKAXE || mainHandStack.getItem() == Items.NETHERITE_PICKAXE) {
-                HextechMod.LOGGER.info("Enhancing pickaxe");
                 List<BlockPos> blocksToBeDestroyed = getBlocksToBeDestroyed(1, pos, (ServerPlayerEntity) player);
-                HextechMod.LOGGER.info("Blocks to be destroyed: " + blocksToBeDestroyed.size());
                 blocksToBeDestroyed.forEach(blockPos -> {
-                    HextechMod.LOGGER.info("Breaking block at: " + blockPos);
                     boolean success = world.breakBlock(blockPos, true, player);
-                    HextechMod.LOGGER.info("Block broken: " + success);
                 });
             }
         }

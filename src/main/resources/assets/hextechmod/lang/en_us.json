@@ -1,7 +1,7 @@
 {
   "item.hextechmod.hextech_gauntlets": "Hextech Gauntlets",
   "item.hextechmod.hextech_hammer": "Hextech Hammer",
-  "item.hextechmod.hextech_sniper_rifle": "Hextech Sniper Rifle",
+  "item.hextechmod.hextech_hammer_blaster_mode": "Hextech Blaster",
 
   "item.hextechmod.hextech_helmet": "Hextech Helmet",
   "item.hextechmod.hextech_chestplate": "Hextech Chestplate",
@@ -12,6 +12,9 @@
   "item.hextechmod.hextech_handle": "Hextech Handle",
   "item.hextechmod.hextech_hammer_head": "Hextech Hammer Head",
   "item.hextechmod.hextech_hammer_combiner_smithing_template": "Hextech Hammer Combiner Smithing Template",
+  "item.hextechmod.hextech_crystal": "Hextech Crystal",
+  "item.hextechmod.unrefined_hextech_crystal_shard": "Unrefined Hextech Crystal Shard",
+  "item.hextechmod.unrefined_hextech_crystal": " Unrefined Hextech Crystal",
 
   "item.hextechmod.smithing_template.hextech_combiner.additions_slot_description": "Hextech Hammer Head",
   "item.hextechmod.smithing_template.hextech_combiner.base_slot_description": "Hextech Handle",
@@ -25,6 +28,27 @@
 
   "itemgroup.hextechmod.hextech_blocks": "Hextech Blocks",
   "itemgroup.hextechmod.hextech_items": "Hextech Items",
+
+
+  "advancements.hextechmod.root.title": "Hextech",
+  "advancements.hextechmod.root.description": "Craft a Unrefined Hextech Crystal Shard",
+  "advancements.hextechmod.hextech_crystal.title": "Hextech Crystal",
+  "advancements.hextechmod.hextech_crystal.description": "Make a Hextech Crystal",
+  "advancements.hextechmod.hextech.hextech_hammer.title": "Hextech Hammer",
+  "advancements.hextechmod.hextech.hextech_hammer.description": "Craft a Hextech Hammer",
+  "advancements.hextechmod.hextech.hextech_gauntlets.title": "Hextech Gauntlets",
+  "advancements.hextechmod.hextech.hextech_gauntlets.description": "Craft Hextech Gauntlets",
+  "advancements.hextechmod.hextech.full_hextech_armor.title": "Full Hextech Armor",
+  "advancements.hextechmod.hextech.full_hextech_armor.description": "Obtain a full set of Hextech Armor",
+  "advancements.hextechmod.hextech.the_serious_swing.title": "A Serious Swing",
+  "advancements.hextechmod.hextech.the_serious_swing.description": "Bring down a tree with a Hextech Hammer",
+
+  "key.categories.hextechmod": "Hextech Mod",
+  "key.hextechmod.toggle_hextech_hammer_blaster_mode": "Toggle Hextech Hammer Blaster Mode",
+  "message.hextechmod.hextech_hammer_blaster_mode_enabled": "Blaster mode enabled",
+  "message.hextechmod.hextech_hammer_blaster_mode_disabled": "Blaster mode disabled",
+  "message.hextechmod.hammer_mode_enabled": "Hammer mode enabled",
+
 
   "itemGroup.hextechmod": "Hextech"
 }

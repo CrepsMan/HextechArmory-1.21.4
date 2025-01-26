@@ -1,0 +1,38 @@
+{
+  "parent": "hextechmod:hextech/root",
+  "display": {
+    "icon": {
+      "id": "hextechmod:hextech_crystal"
+    },
+    "title": {
+      "translate": "advancements.hextechmod.hextech_crystal.title"
+    },
+    "description": {
+      "translate": "advancements.hextechmod.hextech_crystal.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "get_hextech_crystal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hextechmod:hextech_crystal"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_hextech_crystal"
+    ]
+  ],
+  "rewards": {
+    "experience": 50
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "hextechmod:hextech"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "hextechmod:hextech"
+      }
+    ]
+  }
+}

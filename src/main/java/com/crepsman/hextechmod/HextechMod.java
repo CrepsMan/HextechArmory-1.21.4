@@ -5,6 +5,7 @@ import com.crepsman.hextechmod.block.entity.ModBlockEntities;
 import com.crepsman.hextechmod.item.ModItemGroups;
 import com.crepsman.hextechmod.item.ModItems;
 import com.crepsman.hextechmod.util.GauntlestsUsageEvent;
+import com.crepsman.hextechmod.util.KeyBindingHandler;
 import com.crepsman.hextechmod.util.ModTags;
 import com.crepsman.hextechmod.world.gen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
@@ -30,6 +31,8 @@ public class HextechMod implements ModInitializer {
 		ModWorldGeneration.generateModWorldGen();
 		ModTags.init();
 		PlayerBlockBreakEvents.BEFORE.register(new GauntlestsUsageEvent());
+		KeyBindingHandler.register();
+
 
 	}
 }

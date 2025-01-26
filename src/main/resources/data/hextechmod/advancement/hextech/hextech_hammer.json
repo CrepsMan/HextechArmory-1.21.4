@@ -1,0 +1,38 @@
+{
+  "parent": "hextechmod:hextech/root",
+  "display": {
+    "icon": {
+      "id": "hextechmod:hextech_hammer"
+    },
+    "title": {
+      "translate": "advancements.hextechmod.hextech.hextech_hammer.title"
+    },
+    "description": {
+      "translate": "advancements.hextechmod.hextech.hextech_hammer.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "get_hextech_hammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hextechmod:hextech_hammer"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_hextech_hammer"
+    ]
+  ],
+  "rewards": {
+    "experience": 50
+  }
+}
