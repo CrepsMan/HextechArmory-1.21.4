@@ -12,6 +12,7 @@ public class ModTags {
     public static final TagKey<Item> SMELT_TO_TITANIUM_INGOT = of("smelt_to_titanium_ingot");
     public static final TagKey<Item> TITANIUM_ORES = of("titanium_ores");
     public static final TagKey<Item> HEXTECH_ARMOR_MATERIALS = of("hextech_armor_materials");
+    public static final TagKey<Item> HEXTECH_HAMMER = of("hextech_hammer");
 
 
     private static TagKey<Item> of(String path) {

@@ -1,25 +1,22 @@
 package com.crepsman.hextechmod.item.weapons;
 
-import com.crepsman.hextechmod.item.ModItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class HextechHammer extends MiningToolItem {
-    private static final int MAX_BLOCKS = 150;
-    private boolean isCrossbowMode = false;
+public class HextechHammer extends MiningToolItem implements Inventory {
+    private static final int MAX_BLOCKS_LEVEL_1 = 150;
+    //private boolean isCrossbowMode = false;
 
     public HextechHammer(ToolMaterial material, float attackDamage, float attackSpeed, Settings settings) {
         super(material, BlockTags.AXE_MINEABLE, attackDamage, attackSpeed, settings);
@@ -27,10 +24,6 @@ public class HextechHammer extends MiningToolItem {
 
     @Override
     public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
-        if (isCrossbowMode) {
-            return false; // Do not mine in crossbow mode
-        }
-
         if (!world.isClient && miner instanceof PlayerEntity && !miner.isSneaking() && state.isIn(BlockTags.LOGS)) {
             chopTree(world, pos, (PlayerEntity) miner);
         }
@@ -39,19 +32,16 @@ public class HextechHammer extends MiningToolItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (isCrossbowMode) {
-            return false; // Do not deal melee damage in crossbow mode
-        }
         return super.postHit(stack, target, attacker);
     }
 
     private void chopTree(World world, BlockPos pos, PlayerEntity player) {
         Set<BlockPos> visited = new HashSet<>();
-        chopTreeRecursive(world, pos, player, visited, 0);
+        chopTreeRecursive(world, pos, player, visited, 0, HextechHammer.MAX_BLOCKS_LEVEL_1);
     }
 
-    private void chopTreeRecursive(World world, BlockPos pos, PlayerEntity player, Set<BlockPos> visited, int blocksMined) {
-        if (blocksMined >= MAX_BLOCKS) {
+    private void chopTreeRecursive(World world, BlockPos pos, PlayerEntity player, Set<BlockPos> visited, int blocksMined, int MAX_BLOCKS_LEVEL_1) {
+        if (blocksMined >= MAX_BLOCKS_LEVEL_1) {
             return;
         }
 
@@ -67,14 +57,54 @@ public class HextechHammer extends MiningToolItem {
             if (!offset.equals(pos) && !visited.contains(offset)) {
                 BlockState offsetState = world.getBlockState(offset);
                 if (offsetState.isIn(BlockTags.LOGS)) {
-                    chopTreeRecursive(world, offset, player, visited, blocksMined);
+                    chopTreeRecursive(world, offset, player, visited, blocksMined, MAX_BLOCKS_LEVEL_1);
                 }
             }
         }
     }
 
-    public void toggleCrossbowMode(PlayerEntity player) {
-        player.sendMessage(Text.literal("Hextech Hammer, blaster mode enabled"), true);
-        player.setStackInHand(Hand.MAIN_HAND, new ItemStack(ModItems.HEXTECH_HAMMER_BLASTER_MODE));
+    @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public ItemStack getStack(int slot) {
+        return null;
+    }
+
+    @Override
+    public ItemStack removeStack(int slot, int amount) {
+        return null;
+    }
+
+    @Override
+    public ItemStack removeStack(int slot) {
+        return null;
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+
+    }
+
+    @Override
+    public void markDirty() {
+
+    }
+
+    @Override
+    public boolean canPlayerUse(PlayerEntity player) {
+        return false;
+    }
+
+    @Override
+    public void clear() {
+
     }
 }

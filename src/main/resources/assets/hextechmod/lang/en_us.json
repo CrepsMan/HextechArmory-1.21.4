@@ -44,7 +44,7 @@
   "advancements.hextechmod.hextech.the_serious_swing.description": "Bring down a tree with a Hextech Hammer",
 
   "key.categories.hextechmod": "Hextech Mod",
-  "key.hextechmod.toggle_hextech_hammer_blaster_mode": "Toggle Hextech Hammer Blaster Mode",
+  "key.hextechmod.toggle_hextech_hammer_blaster_mode": "Toggle Hextech Hammer Blaster Mode (Under development)",
   "message.hextechmod.hextech_hammer_blaster_mode_enabled": "Blaster mode enabled",
   "message.hextechmod.hextech_hammer_blaster_mode_disabled": "Blaster mode disabled",
   "message.hextechmod.hammer_mode_enabled": "Hammer mode enabled",

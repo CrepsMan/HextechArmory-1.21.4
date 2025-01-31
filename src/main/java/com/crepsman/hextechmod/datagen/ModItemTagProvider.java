@@ -33,6 +33,8 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(ModItems.HEXTECH_CHESTPLATE)
                 .add(ModItems.HEXTECH_LEGGINGS)
                 .add(ModItems.HEXTECH_BOOTS);
+        getOrCreateTagBuilder(ModTags.HEXTECH_HAMMER)
+                .add(ModItems.HEXTECH_HAMMER);
 
     }
 }

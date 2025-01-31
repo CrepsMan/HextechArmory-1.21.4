@@ -25,11 +25,11 @@ public class KeyBindingHandler {
             while (toggleBlasterModeKey.wasPressed()) {
                 if (client.player != null && client.player.getMainHandStack().getItem() instanceof HextechHammer) {
                     HextechHammer hammer = (HextechHammer) client.player.getMainHandStack().getItem();
-                    hammer.toggleCrossbowMode(client.player);
+                    //hammer.toggleCrossbowMode(client.player);
                 }
                 else if (client.player != null && client.player.getMainHandStack().getItem() instanceof HextechHammerBlasterMode) {
                     HextechHammerBlasterMode crossbowMode = (HextechHammerBlasterMode) client.player.getMainHandStack().getItem();
-                    crossbowMode.toggleHammerMode(client.player);
+                    //crossbowMode.toggleHammerMode(client.player);
                 }
             }
         });
