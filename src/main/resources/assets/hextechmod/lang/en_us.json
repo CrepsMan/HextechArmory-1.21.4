@@ -49,6 +49,11 @@
   "message.hextechmod.hextech_hammer_blaster_mode_disabled": "Blaster mode disabled",
   "message.hextechmod.hammer_mode_enabled": "Hammer mode enabled",
 
+  "message.hextechmod.no_item_held": "You are not holding a Hextech Hammer.",
+  "message.hextechmod.no_crystals": "You have no Hextech Crystals.",
+  "message.hextechmod.max_power": "The Hextech Hammer is at maximum power.",
+  "message.hextechmod.current_power": "The Hextech Hammer is at %s power.",
+
 
   "itemGroup.hextechmod": "Hextech"
 }

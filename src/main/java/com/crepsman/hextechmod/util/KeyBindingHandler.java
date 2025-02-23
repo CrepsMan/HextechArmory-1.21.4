@@ -1,35 +1,35 @@
 package com.crepsman.hextechmod.util;
 
-import com.crepsman.hextechmod.item.weapons.HextechHammer;
-import com.crepsman.hextechmod.item.weapons.HextechHammerBlasterMode;
+import com.crepsman.hextechmod.HextechMod;
+import com.crepsman.hextechmod.network.NetworkHandler;
+import com.crepsman.hextechmod.network.packet.HammerC2SPacket;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.network.PacketByteBuf;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyBindingHandler {
     private static final String CATEGORY = "key.categories.hextechmod";
-    private static final String TOGGLE_BLASTER_MODE = "key.hextechmod.toggle_hextech_hammer_blaster_mode";
-    private static KeyBinding toggleBlasterModeKey;
+    private static final String EMPOWER_ITEM = "key.hextechmod.empower_item";
+    public static KeyBinding empowerItemKey;
 
     public static void register() {
-        toggleBlasterModeKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                TOGGLE_BLASTER_MODE,
+        empowerItemKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                EMPOWER_ITEM,
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_COMMA,
+                GLFW.GLFW_KEY_E,
                 CATEGORY
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (toggleBlasterModeKey.wasPressed()) {
-                if (client.player != null && client.player.getMainHandStack().getItem() instanceof HextechHammer) {
-                    HextechHammer hammer = (HextechHammer) client.player.getMainHandStack().getItem();
-                    //hammer.toggleCrossbowMode(client.player);
-                }
-                else if (client.player != null && client.player.getMainHandStack().getItem() instanceof HextechHammerBlasterMode) {
-                    HextechHammerBlasterMode crossbowMode = (HextechHammerBlasterMode) client.player.getMainHandStack().getItem();
-                    //crossbowMode.toggleHammerMode(client.player);
+            while (empowerItemKey.wasPressed()) {
+                if (client.player != null) {
+                    HextechMod.LOGGER.info("Empower item key pressed");
+                    ClientPlayNetworking.send(new HammerC2SPacket());
                 }
             }
         });

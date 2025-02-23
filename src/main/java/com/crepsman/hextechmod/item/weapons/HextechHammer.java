@@ -1,49 +1,91 @@
 package com.crepsman.hextechmod.item.weapons;
 
+import com.crepsman.hextechmod.item.ModItems;
+import com.crepsman.hextechmod.component.ModDataComponentTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.MiningToolItem;
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.*;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class HextechHammer extends MiningToolItem implements Inventory {
-    private static final int MAX_BLOCKS_LEVEL_1 = 150;
-    //private boolean isCrossbowMode = false;
+public class HextechHammer extends MiningToolItem {
+    private static final int MAX_BLOCKS = 200;
+    private static final int TREE_CHOP_COST = 100;
+    private static final int MAX_POWER = 50000;
+    private static final int CRYSTAL_POWER = 10000;
 
     public HextechHammer(ToolMaterial material, float attackDamage, float attackSpeed, Settings settings) {
         super(material, BlockTags.AXE_MINEABLE, attackDamage, attackSpeed, settings);
     }
 
     @Override
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        int power = stack.getOrDefault(ModDataComponentTypes.HEXTECH_POWER, 0);
+        tooltip.add(Text.translatable("Power: " + power).formatted(Formatting.GOLD));
+    }
+
+    public static void setPower(ItemStack stack, int power) {
+        stack.set(ModDataComponentTypes.HEXTECH_POWER, Math.min(power, MAX_POWER));
+    }
+
+    public static int getPower(ItemStack stack) {
+        return stack.getOrDefault(ModDataComponentTypes.HEXTECH_POWER, 0);
+    }
+
+    public static void empowerItem(PlayerEntity player) {
+        if (player.getWorld().isClient) return; // Server-side only
+
+        ItemStack heldStack = player.getMainHandStack();
+        if (!(heldStack.getItem() instanceof HextechHammer)) {
+            player.sendMessage(Text.translatable("message.hextechmod.no_item_held"), true);
+            return;
+        }
+
+        int currentPower = getPower(heldStack);
+        if (currentPower >= MAX_POWER) {
+            player.sendMessage(Text.translatable("message.hextechmod.max_power"), true);
+            return;
+        }
+
+        for (int i = 0; i < player.getInventory().size(); i++) {
+            ItemStack stack = player.getInventory().getStack(i);
+            if (stack.isOf(ModItems.HEXTECH_CRYSTAL)) {
+                stack.decrement(1);
+                setPower(heldStack, currentPower + CRYSTAL_POWER);
+                player.sendMessage(Text.translatable("message.hextechmod.current_power", getPower(heldStack)), true);
+                player.playerScreenHandler.sendContentUpdates();
+                return;
+            }
+        }
+
+        player.sendMessage(Text.translatable("message.hextechmod.no_crystals"), true);
+    }
+
+    @Override
     public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
-        if (!world.isClient && miner instanceof PlayerEntity && !miner.isSneaking() && state.isIn(BlockTags.LOGS)) {
-            chopTree(world, pos, (PlayerEntity) miner);
+        if (miner instanceof PlayerEntity player && getPower(stack) >= TREE_CHOP_COST) {
+            chopTree(world, pos, player, MAX_BLOCKS);
+            setPower(stack, getPower(stack) - TREE_CHOP_COST);
         }
         return super.postMine(stack, world, state, pos, miner);
     }
 
-    @Override
-    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        return super.postHit(stack, target, attacker);
-    }
-
-    private void chopTree(World world, BlockPos pos, PlayerEntity player) {
+    private void chopTree(World world, BlockPos pos, PlayerEntity player, int maxBlocks) {
         Set<BlockPos> visited = new HashSet<>();
-        chopTreeRecursive(world, pos, player, visited, 0, HextechHammer.MAX_BLOCKS_LEVEL_1);
+        chopTreeRecursive(world, pos, player, visited, 0, maxBlocks);
     }
 
-    private void chopTreeRecursive(World world, BlockPos pos, PlayerEntity player, Set<BlockPos> visited, int blocksMined, int MAX_BLOCKS_LEVEL_1) {
-        if (blocksMined >= MAX_BLOCKS_LEVEL_1) {
-            return;
-        }
+    private void chopTreeRecursive(World world, BlockPos pos, PlayerEntity player, Set<BlockPos> visited, int blocksMined, int maxBlocks) {
+        if (blocksMined >= maxBlocks || visited.contains(pos)) return;
 
         visited.add(pos);
         BlockState state = world.getBlockState(pos);
@@ -54,57 +96,9 @@ public class HextechHammer extends MiningToolItem implements Inventory {
         }
 
         for (BlockPos offset : BlockPos.iterate(pos.add(-1, -1, -1), pos.add(1, 1, 1))) {
-            if (!offset.equals(pos) && !visited.contains(offset)) {
-                BlockState offsetState = world.getBlockState(offset);
-                if (offsetState.isIn(BlockTags.LOGS)) {
-                    chopTreeRecursive(world, offset, player, visited, blocksMined, MAX_BLOCKS_LEVEL_1);
-                }
+            if (!visited.contains(offset) && world.getBlockState(offset).isIn(BlockTags.LOGS)) {
+                chopTreeRecursive(world, offset, player, visited, blocksMined, maxBlocks);
             }
         }
-    }
-
-    @Override
-    public int size() {
-        return 0;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
-
-    @Override
-    public ItemStack getStack(int slot) {
-        return null;
-    }
-
-    @Override
-    public ItemStack removeStack(int slot, int amount) {
-        return null;
-    }
-
-    @Override
-    public ItemStack removeStack(int slot) {
-        return null;
-    }
-
-    @Override
-    public void setStack(int slot, ItemStack stack) {
-
-    }
-
-    @Override
-    public void markDirty() {
-
-    }
-
-    @Override
-    public boolean canPlayerUse(PlayerEntity player) {
-        return false;
-    }
-
-    @Override
-    public void clear() {
-
     }
 }
