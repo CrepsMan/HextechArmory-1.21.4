@@ -43,8 +43,9 @@ public class AtlasGauntlets extends BowItem {
     private float attackSpeed;
     private boolean blocking;
     private static final int NORMAL_COOLDOWN_TICKS = 140; // 7 seconds
-    private static final int EXTENDED_COOLDOWN_TICKS = 200; // 10 seconds
-    private static final int MAX_USE_TIME = 100; // 5 seconds (20 ticks/second)
+    private static final int EXTENDED_COOLDOWN_TICKS = 280; // 14 seconds (changed from 10 to 14 seconds)
+    private static final int MAX_USE_TIME = 100; // 5 seconds threshold for extended cooldown
+    private static final int ABSOLUTE_MAX_USE_TIME = 200; // 10 seconds for auto-stop
     private static final int BLOCKING_POWER_COST_PER_TICK = 1; // Power cost per tick while blocking
     private static boolean useOffhand = true;
     private static final Map<UUID, Boolean> playerBlockingStates = new HashMap<>();
@@ -136,24 +137,6 @@ public class AtlasGauntlets extends BowItem {
         return ActionResult.CONSUME;
     }
 
-    @Override
-    public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (!(user instanceof PlayerEntity player)) return false;
-        playerBlockingStates.remove(player.getUuid());
-
-        int useDuration = getMaxUseTime(stack) - remainingUseTicks;
-
-        if (useDuration >= MAX_USE_TIME) {
-            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.extended_cooldown"), true);
-            // Fix: Pass the ItemStack instead of 'this'
-            player.getItemCooldownManager().set(stack, EXTENDED_COOLDOWN_TICKS);
-        } else {
-            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.normal_cooldown"), true);
-            // Fix: Pass the ItemStack instead of 'this'
-            player.getItemCooldownManager().set(stack, NORMAL_COOLDOWN_TICKS / 2);
-        }
-        return true;
-    }
     public static void performDash(PlayerEntity player, double dashDistance) {
 
         if (playerBlockingStates.getOrDefault(player.getUuid(), false)) {
@@ -307,17 +290,23 @@ public class AtlasGauntlets extends BowItem {
         if (!(user instanceof PlayerEntity player)) return;
 
         if (player.isUsingItem() && player.getActiveItem() == stack) {
-            // Calculate how long the item has been used
+            // Calculate how long the item has been used (in ticks)
             int usedTime = getMaxUseTime(stack) - remainingUseTicks;
 
-            // Force stop when maximum time is reached (5 seconds)
-            if (usedTime >= MAX_USE_TIME) {
+            // Auto-stop at 10 seconds (200 ticks)
+            if (usedTime >= ABSOLUTE_MAX_USE_TIME) {
                 player.sendMessage(Text.translatable("message.hextechmod.gauntlets.max_blocking_time"), true);
                 player.stopUsingItem(); // Force stop using
                 playerBlockingStates.remove(player.getUuid());
 
+                // Apply extended cooldown (14 seconds)
                 player.getItemCooldownManager().set(stack, EXTENDED_COOLDOWN_TICKS);
                 return;
+            }
+
+            // Show warning at 5 seconds (100 ticks)
+            if (usedTime == MAX_USE_TIME) {
+                player.sendMessage(Text.translatable("message.hextechmod.gauntlets.max_blocking_time"), true);
             }
 
             // Power consumption logic
@@ -336,6 +325,23 @@ public class AtlasGauntlets extends BowItem {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        if (!(user instanceof PlayerEntity player)) return false;
+        playerBlockingStates.remove(player.getUuid());
+
+        int usedTime = getMaxUseTime(stack) - remainingUseTicks;
+
+        if (usedTime >= MAX_USE_TIME) {
+            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.extended_cooldown"), true);
+            player.getItemCooldownManager().set(stack, EXTENDED_COOLDOWN_TICKS);
+        } else {
+            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.normal_cooldown"), true);
+            player.getItemCooldownManager().set(stack, NORMAL_COOLDOWN_TICKS);
+        }
+        return true;
     }
 
     // Add helper method to check if a player is blocking
@@ -387,7 +393,7 @@ public class AtlasGauntlets extends BowItem {
     }
 
     public int getMaxUseTime(ItemStack stack) {
-        return MAX_USE_TIME; // 5 seconds (100 ticks)
+        return 280;
     }
 
     public static boolean isWornInOffhand(PlayerEntity player) {

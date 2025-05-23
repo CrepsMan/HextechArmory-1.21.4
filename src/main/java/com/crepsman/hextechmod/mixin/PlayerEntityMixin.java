@@ -4,9 +4,10 @@ import com.crepsman.hextechmod.item.weapons.AtlasGauntlets;
 import com.crepsman.hextechmod.util.DamadgeSourceUtils;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,34 +28,48 @@ public class PlayerEntityMixin {
 
         PlayerEntity player = (PlayerEntity)(Object)this;
 
-        // Check both hands for gauntlets
-        ItemStack mainHandStack = player.getStackInHand(Hand.MAIN_HAND);
-        ItemStack offHandStack = player.getStackInHand(Hand.OFF_HAND);
+        // Check if player is blocking with gauntlets
+        if (AtlasGauntlets.isPlayerBlocking(player)) {
+            boolean hasMainHandGauntlet = player.getMainHandStack().getItem() instanceof AtlasGauntlets;
+            boolean hasOffHandGauntlet = player.getOffHandStack().getItem() instanceof AtlasGauntlets;
 
-        AtlasGauntlets gauntlets = null;
-        if (mainHandStack.getItem() instanceof AtlasGauntlets && player.getActiveHand() == Hand.MAIN_HAND) {
-            gauntlets = (AtlasGauntlets) mainHandStack.getItem();
-        } else if (offHandStack.getItem() instanceof AtlasGauntlets && player.getActiveHand() == Hand.OFF_HAND) {
-            gauntlets = (AtlasGauntlets) offHandStack.getItem();
-        }
+            if (hasMainHandGauntlet && hasOffHandGauntlet) {
+                // Handle projectiles - block them completely
+                if (DamadgeSourceUtils.isProjectile(source)) {
+                    // Play deflection sound
+                    player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(),
+                            SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.PLAYERS, 1.0f, 1.2f);
 
-        // If player is blocking with gauntlets
-        if (gauntlets != null && gauntlets.isBlocking() && player.isUsingItem()) {
-            if (DamadgeSourceUtils.isProjectile(source)) {
-                // Block all projectile damage
-                player.sendMessage(Text.of("Projectile blocked!"), true);
-                cir.setReturnValue(false); // Cancel damage completely
-            } else {
-                // Get blocking efficiency (70% reduction)
-                float blockingEfficiency = 0.5f;
-                float reducedAmount = amount * (1 - blockingEfficiency);
+                    // Create particle effect for the deflection
+                    if (player.getWorld() instanceof ServerWorld serverWorld) {
+                        serverWorld.spawnParticles(
+                                ParticleTypes.CRIT,
+                                player.getX(), player.getY() + 1.0, player.getZ(),
+                                15, 0.5, 0.5, 0.5, 0.1
+                        );
+                    }
 
-                player.sendMessage(Text.of(String.format("Blocked %.0f%% damage!", blockingEfficiency * 100)), true);
+                    cir.setReturnValue(false); // Cancel damage completely
+                    return;
+                }
 
-                // Apply damage with recursion protection
+                // Reduce other damage types by half
+                float reducedAmount = amount * 0.5f;
+
+                // Play blocking sound
+                player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(),
+                        SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.PLAYERS, 0.8f, 0.8f);
+
+                // Apply reduced damage with recursion protection
                 IS_IN_DAMAGE_HANDLER = true;
                 try {
-                    cir.setReturnValue(player.damage(world, source, reducedAmount));
+                    if (player.getWorld() instanceof ServerWorld serverWorld) {
+                        boolean result = player.damage(serverWorld, source, reducedAmount);
+                        cir.setReturnValue(result);
+                    } else {
+                        // Handle client-side case
+                        cir.setReturnValue(true);
+                    }
                 } finally {
                     IS_IN_DAMAGE_HANDLER = false;
                 }

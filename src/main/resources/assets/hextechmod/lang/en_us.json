@@ -61,6 +61,8 @@
   "message.hextechmod.gauntlets.normal_cooldown": "Blocking ended. Normal cooldown (7s).",
   "message.hextechmod.gauntlets.max_blocking_time": "Maximum blocking time reached.",
   "message.hextechmod.not_enough_power": "Not enough power.",
+  "message.hextechmod.gauntlets.need_dual_gauntlets": "You need Atlas Gauntlets in both hands.",
+  "message.hextechmod.gauntlets.cant_dash_while_blocking": "You cannot dash while blocking.",
 
   "itemGroup.hextechmod": "Hextech"
 }
