@@ -20,7 +20,7 @@ public class ModItemGroups {
                     .icon(() -> new ItemStack(ModItems.HEXTECH_HAMMER)) // Set the icon to one of your custom items
                     .entries((displayContext, entries) -> {
                         // Add your custom items here
-                        entries.add(ModItems.HEXTECH_GAUNTLETS);
+                        entries.add(ModItems.ATLAS_GAUNTLETS);
                         entries.add(ModItems.HEXTECH_HAMMER);
                         entries.add(ModItems.TITANIUM_INGOT);
                         entries.add(ModItems.RAW_TITANIUM);

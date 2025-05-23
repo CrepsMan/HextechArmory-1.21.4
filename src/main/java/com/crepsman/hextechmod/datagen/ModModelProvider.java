@@ -38,6 +38,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.HEXTECH_HAMMER_HEAD, Models.GENERATED);
 
 
+
         itemModelGenerator.registerArmor(ModItems.HEXTECH_HELMET, RegistryKey.of(RegistryKey.ofRegistry(Identifier.ofVanilla("equipment_asset")), Identifier.of(HextechMod.MOD_ID, "hextech")),
                 "helmet", false);
         itemModelGenerator.registerArmor(ModItems.HEXTECH_CHESTPLATE, RegistryKey.of(RegistryKey.ofRegistry(Identifier.ofVanilla("equipment_asset")), Identifier.of(HextechMod.MOD_ID, "hextech")),

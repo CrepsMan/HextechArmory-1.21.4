@@ -1,5 +1,5 @@
 {
-  "item.hextechmod.hextech_gauntlets": "Hextech Gauntlets",
+  "item.hextechmod.atlas_gauntlets": "Atlas Gauntlets",
   "item.hextechmod.hextech_hammer": "Hextech Hammer",
   "item.hextechmod.hextech_hammer_blaster_mode": "Hextech Blaster",
 
@@ -36,8 +36,8 @@
   "advancements.hextechmod.hextech_crystal.description": "Make a Hextech Crystal",
   "advancements.hextechmod.hextech.hextech_hammer.title": "Hextech Hammer",
   "advancements.hextechmod.hextech.hextech_hammer.description": "Craft a Hextech Hammer",
-  "advancements.hextechmod.hextech.hextech_gauntlets.title": "Hextech Gauntlets",
-  "advancements.hextechmod.hextech.hextech_gauntlets.description": "Craft Hextech Gauntlets",
+  "advancements.hextechmod.hextech.atlas_gauntlets.title": "Atlas Gauntlets",
+  "advancements.hextechmod.hextech.atlas_gauntlets.description": "Craft Atlas Gauntlets",
   "advancements.hextechmod.hextech.full_hextech_armor.title": "Full Hextech Armor",
   "advancements.hextechmod.hextech.full_hextech_armor.description": "Obtain a full set of Hextech Armor",
   "advancements.hextechmod.hextech.the_serious_swing.title": "A Serious Swing",
@@ -54,6 +54,13 @@
   "message.hextechmod.max_power": "The Hextech Hammer is at maximum power.",
   "message.hextechmod.current_power": "The Hextech Hammer is at %s power.",
 
+  "message.hextechmod.gauntlets.cooldown": "Gauntlets are on cooldown.",
+  "message.hextechmod.gauntlets.dash": "Dash!",
+  "message.hextechmod.gauntlets.blocking_activated": "Blocking activated!",
+  "message.hextechmod.gauntlets.extended_cooldown": "Maximum blocking time reached. Extended cooldown (10s).",
+  "message.hextechmod.gauntlets.normal_cooldown": "Blocking ended. Normal cooldown (7s).",
+  "message.hextechmod.gauntlets.max_blocking_time": "Maximum blocking time reached.",
+  "message.hextechmod.not_enough_power": "Not enough power.",
 
   "itemGroup.hextechmod": "Hextech"
 }

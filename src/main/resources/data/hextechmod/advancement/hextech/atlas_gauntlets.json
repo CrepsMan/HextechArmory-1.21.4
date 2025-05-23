@@ -2,13 +2,13 @@
   "parent": "hextechmod:hextech/root",
   "display": {
     "icon": {
-      "id": "hextechmod:hextech_gauntlets"
+      "id": "hextechmod:atlas_gauntlets"
     },
     "title": {
-      "translate": "advancements.hextechmod.hextech.hextech_gauntlets.title"
+      "translate": "advancements.hextechmod.hextech.atlas_gauntlets.title"
     },
     "description": {
-      "translate": "advancements.hextechmod.hextech.hextech_gauntlets.description"
+      "translate": "advancements.hextechmod.hextech.atlas_gauntlets.description"
     },
     "frame": "challenge",
     "show_toast": true,
@@ -16,12 +16,12 @@
     "hidden": true
   },
   "criteria": {
-    "get_hextech_gauntlets": {
+    "get_atlas_gauntlets": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": "hextechmod:hextech_gauntlets"
+            "items": "hextechmod:atlas_gauntlets"
           }
         ]
       }
@@ -29,7 +29,7 @@
   },
   "requirements": [
     [
-      "get_hextech_gauntlets"
+      "get_atlas_gauntlets"
     ]
   ],
   "rewards": {

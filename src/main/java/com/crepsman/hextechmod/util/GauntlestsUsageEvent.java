@@ -1,6 +1,6 @@
 package com.crepsman.hextechmod.util;
 
-import com.crepsman.hextechmod.item.weapons.HextechGauntlets;
+import com.crepsman.hextechmod.item.weapons.AtlasGauntlets;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -22,14 +22,14 @@ public class GauntlestsUsageEvent implements PlayerBlockBreakEvents.Before {
                                     BlockState state, @Nullable BlockEntity blockEntity) {
         ItemStack offHandItem = player.getOffHandStack();
 
-        if (offHandItem.getItem() instanceof HextechGauntlets gauntlets && player instanceof ServerPlayerEntity serverPlayer) {
+        if (offHandItem.getItem() instanceof AtlasGauntlets gauntlets && player instanceof ServerPlayerEntity serverPlayer) {
             if (HARVESTED_BLOCKS.contains(pos)) {
                 return true;
             }
 
-            HextechGauntlets.enhancePickaxe(player, world, pos, null);
+            AtlasGauntlets.enhancePickaxe(player, world, pos, null);
 
-            for (BlockPos position : HextechGauntlets.getBlocksToBeDestroyed(1, pos, serverPlayer)) {
+            for (BlockPos position : AtlasGauntlets.getBlocksToBeDestroyed(1, pos, serverPlayer)) {
                 if (pos == position || !gauntlets.isCorrectForDrops(offHandItem, world.getBlockState(position))) {
                     continue;
                 }

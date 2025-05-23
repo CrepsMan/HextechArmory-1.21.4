@@ -5,19 +5,27 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BeaconBlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BeaconBlockEntity.class)
 public class BeaconBlockEntityMixin {
+    @Unique
+    private static int hextechCrystals = 0;
 
     @Inject(method = "tick", at = @At("HEAD"))
     private static void onTick(World world, BlockPos pos, BlockState state, BeaconBlockEntity blockEntity, CallbackInfo ci) {
@@ -75,5 +83,21 @@ public class BeaconBlockEntityMixin {
                 }
             }
         }
+    }
+    @Inject(method = "writeNbt", at = @At("TAIL"))
+    private void writeHextechData(NbtCompound nbt, RegistryWrapper.WrapperLookup registries, CallbackInfo ci) {
+        nbt.putInt("HextechCrystals", hextechCrystals);
+    }
+
+    @Inject(method = "readNbt", at = @At("TAIL"))
+    private void readHextechData(NbtCompound nbt, RegistryWrapper.WrapperLookup registries, CallbackInfo ci) {
+        hextechCrystals = nbt.getInt("HextechCrystals");
+    }
+
+    @Inject(method = "updateLevel", at = @At("RETURN"), cancellable = true)
+    private static void modifyBeaconLevel(CallbackInfoReturnable<Integer> cir) {
+        int originalLevel = cir.getReturnValue();
+        int modifiedLevel = originalLevel + (int)(originalLevel * (hextechCrystals * 0.1f));
+        cir.setReturnValue(modifiedLevel);
     }
 }

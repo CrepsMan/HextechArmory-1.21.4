@@ -3,7 +3,7 @@ package com.crepsman.hextechmod.item;
 
 import com.crepsman.hextechmod.HextechMod;
 import com.crepsman.hextechmod.item.smithing_templates.HextechHammerCombinerSmithingTemplateItem;
-import com.crepsman.hextechmod.item.weapons.HextechGauntlets;
+import com.crepsman.hextechmod.item.weapons.AtlasGauntlets;
 import com.crepsman.hextechmod.item.weapons.HextechHammer;
 import com.crepsman.hextechmod.item.weapons.HextechHammerBlasterMode;
 import net.minecraft.item.*;
@@ -20,7 +20,9 @@ import java.util.function.Function;
 
 public class ModItems {
     // Weapons
-    public static final Item HEXTECH_GAUNTLETS = registerItem("hextech_gauntlets", HextechGauntlets::new, new Item.Settings().fireproof().rarity(Rarity.EPIC).maxCount(1));
+    public static final Item ATLAS_GAUNTLETS = registerItem("atlas_gauntlets",
+            settings -> new AtlasGauntlets(5.0F, 3.0F, settings),
+            new Item.Settings().fireproof().rarity(Rarity.EPIC).maxCount(1));
     public static final Item HEXTECH_HAMMER = registerItem("hextech_hammer", settings -> new HextechHammer(ToolMaterial.NETHERITE, 11.0F, -3.5F, settings), new Item.Settings().fireproof().rarity(Rarity.EPIC));
     public static final Item HEXTECH_HAMMER_BLASTER_MODE = registerItem("hextech_hammer_blaster_mode", HextechHammerBlasterMode::new, new Item.Settings().fireproof().rarity(Rarity.EPIC).maxCount(1));
     // Materials

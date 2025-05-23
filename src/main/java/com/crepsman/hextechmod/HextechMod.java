@@ -2,6 +2,7 @@ package com.crepsman.hextechmod;
 
 import com.crepsman.hextechmod.block.ModBlocks;
 import com.crepsman.hextechmod.block.entity.ModBlockEntities;
+import com.crepsman.hextechmod.event.ModEventHandlers;
 import com.crepsman.hextechmod.item.ModItemGroups;
 import com.crepsman.hextechmod.item.ModItems;
 import com.crepsman.hextechmod.network.NetworkHandler;
@@ -13,6 +14,7 @@ import com.crepsman.hextechmod.world.gen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +39,11 @@ public class HextechMod implements ModInitializer {
 		KeyBindingHandler.register();
 		ModScreenHandlers.registerAll();
 		NetworkHandler.registerC2SPackets();
+		ModEventHandlers.register();
+
+	}
+	public static Identifier identifierOf(String name) {
+		return Identifier.of(MOD_ID, name);
 
 	}
 }

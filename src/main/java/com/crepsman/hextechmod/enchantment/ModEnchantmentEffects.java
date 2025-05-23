@@ -8,8 +8,8 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
 public class ModEnchantmentEffects {
-    //public static final MapCodec<? extends EnchantmentEntityEffect> TREE_CHOPPER =
-           // registerEntityEffect("tree_chopper", (MapCodec<? extends EnchantmentEntityEffect>));
+    /*public static final MapCodec<? extends EnchantmentEntityEffect> DASH =
+           registerEntityEffect("dash", (MapCodec<? extends EnchantmentEntityEffect>) EnchantmentEntityEffect.CODEC);*/
 
     private static MapCodec<? extends EnchantmentEntityEffect> registerEntityEffect(String name, MapCodec<? extends EnchantmentEntityEffect> codec) {
         return Registry.register(Registries.ENCHANTMENT_ENTITY_EFFECT_TYPE, Identifier.of(HextechMod.MOD_ID, name), codec);
