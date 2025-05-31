@@ -17,16 +17,16 @@ public class ModItemGroups {
             Identifier.tryParse(HextechMod.MOD_ID, "hextech_items"),
             FabricItemGroup.builder()
                     .displayName(Text.translatable("itemgroup.hextechmod.hextech_items"))
-                    .icon(() -> new ItemStack(ModItems.HEXTECH_HAMMER)) // Set the icon to one of your custom items
+                    .icon(() -> new ItemStack(ModItems.MERCURY_HAMMER)) // Set the icon to one of your custom items
                     .entries((displayContext, entries) -> {
                         // Add your custom items here
                         entries.add(ModItems.ATLAS_GAUNTLETS);
-                        entries.add(ModItems.HEXTECH_HAMMER);
+                        entries.add(ModItems.MERCURY_HAMMER);
                         entries.add(ModItems.TITANIUM_INGOT);
                         entries.add(ModItems.RAW_TITANIUM);
                         entries.add(ModItems.HEXTECH_HANDLE);
-                        entries.add(ModItems.HEXTECH_HAMMER_HEAD);
-                        entries.add(ModItems.HEXTECH_HAMMER_COMBINER_SMITHING_TEMPLATE);
+                        entries.add(ModItems.MERCURY_HAMMER_HEAD);
+                        entries.add(ModItems.MERCURY_HAMMER_COMBINER_SMITHING_TEMPLATE);
                         entries.add(ModItems.HEXTECH_HELMET);
                         entries.add(ModItems.HEXTECH_CHESTPLATE);
                         entries.add(ModItems.HEXTECH_LEGGINGS);

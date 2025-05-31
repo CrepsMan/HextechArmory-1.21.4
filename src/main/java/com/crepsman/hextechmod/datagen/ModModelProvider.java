@@ -9,7 +9,6 @@ import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ItemModelGenerator;
 import net.minecraft.client.data.Models;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 
 public class ModModelProvider extends FabricModelProvider {
@@ -35,7 +34,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.UNREFINED_HEXTECH_CRYSTAL_SHARD, Models.GENERATED);
         itemModelGenerator.register(ModItems.HEXTECH_CRYSTAL, Models.GENERATED);
         itemModelGenerator.register(ModItems.HEXTECH_HANDLE, Models.GENERATED);
-        itemModelGenerator.register(ModItems.HEXTECH_HAMMER_HEAD, Models.GENERATED);
+        itemModelGenerator.register(ModItems.MERCURY_HAMMER_HEAD, Models.GENERATED);
 
 
 

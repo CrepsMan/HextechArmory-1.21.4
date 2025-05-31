@@ -4,7 +4,7 @@ import com.crepsman.hextechmod.HextechMod;
 import com.crepsman.hextechmod.component.ModDataComponentTypes;
 import com.crepsman.hextechmod.item.ModItems;
 import com.crepsman.hextechmod.item.weapons.AtlasGauntlets;
-import com.crepsman.hextechmod.item.weapons.HextechHammer;
+import com.crepsman.hextechmod.item.weapons.MercuryHammer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -93,7 +93,7 @@ public class HextechPowerUtils {
         }
 
         // Check if the item is a hextech powered item
-        if (heldStack.getItem() instanceof HextechHammer ||
+        if (heldStack.getItem() instanceof MercuryHammer ||
                 heldStack.getItem() instanceof AtlasGauntlets ||
                 heldStack.isIn(ModTags.HEXTECH_POWERED)) {
 
@@ -128,7 +128,7 @@ public class HextechPowerUtils {
 
             // Different messages based on item type
             String message;
-            if (heldStack.getItem() instanceof HextechHammer) {
+            if (heldStack.getItem() instanceof MercuryHammer) {
                 message = "message.hextechmod.current_power";
             } else if (heldStack.getItem() instanceof AtlasGauntlets) {
                 message = "message.hextechmod.gauntlets.power";

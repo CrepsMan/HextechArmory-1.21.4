@@ -2,10 +2,9 @@ package com.crepsman.hextechmod.item;
 
 
 import com.crepsman.hextechmod.HextechMod;
-import com.crepsman.hextechmod.item.smithing_templates.HextechHammerCombinerSmithingTemplateItem;
+import com.crepsman.hextechmod.item.smithing_templates.MercuryHammerCombinerSmithingTemplateItem;
 import com.crepsman.hextechmod.item.weapons.AtlasGauntlets;
-import com.crepsman.hextechmod.item.weapons.HextechHammer;
-import com.crepsman.hextechmod.item.weapons.HextechHammerBlasterMode;
+import com.crepsman.hextechmod.item.weapons.MercuryHammer;
 import net.minecraft.item.*;
 import net.minecraft.item.equipment.EquipmentType;
 import net.minecraft.registry.Registries;
@@ -23,18 +22,17 @@ public class ModItems {
     public static final Item ATLAS_GAUNTLETS = registerItem("atlas_gauntlets",
             settings -> new AtlasGauntlets(5.0F, 3.0F, settings),
             new Item.Settings().fireproof().rarity(Rarity.EPIC).maxCount(1));
-    public static final Item HEXTECH_HAMMER = registerItem("hextech_hammer", settings -> new HextechHammer(ToolMaterial.NETHERITE, 11.0F, -3.5F, settings), new Item.Settings().fireproof().rarity(Rarity.EPIC));
-    public static final Item HEXTECH_HAMMER_BLASTER_MODE = registerItem("hextech_hammer_blaster_mode", HextechHammerBlasterMode::new, new Item.Settings().fireproof().rarity(Rarity.EPIC).maxCount(1));
+    public static final Item MERCURY_HAMMER = registerItem("mercury_hammer", settings -> new MercuryHammer(ToolMaterial.NETHERITE, 11.0F, -3.5F, settings), new Item.Settings().fireproof().rarity(Rarity.EPIC));
     // Materials
     public static final Item TITANIUM_INGOT = registerItem("titanium_ingot", Item::new, new Item.Settings().fireproof().rarity(Rarity.RARE));
     public static final Item RAW_TITANIUM = registerItem("raw_titanium", Item::new, new Item.Settings().fireproof().rarity(Rarity.RARE));
 
     //Parts
     public static final Item HEXTECH_HANDLE = registerItem("hextech_handle", Item::new, new Item.Settings().fireproof().rarity(Rarity.RARE));
-    public static final Item HEXTECH_HAMMER_HEAD = registerItem("hextech_hammer_head", Item::new, new Item.Settings().fireproof().rarity(Rarity.EPIC));
+    public static final Item MERCURY_HAMMER_HEAD = registerItem("mercury_hammer_head", Item::new, new Item.Settings().fireproof().rarity(Rarity.EPIC));
 
     //Smithing templates
-    public static final Item HEXTECH_HAMMER_COMBINER_SMITHING_TEMPLATE =registerItem("hextech_hammer_combiner_smithing_template", HextechHammerCombinerSmithingTemplateItem::createNetheriteUpgrade, (new Item.Settings().fireproof().rarity(Rarity.UNCOMMON)).rarity(Rarity.EPIC));
+    public static final Item MERCURY_HAMMER_COMBINER_SMITHING_TEMPLATE =registerItem("mercury_hammer_combiner_smithing_template", MercuryHammerCombinerSmithingTemplateItem::createNetheriteUpgrade, (new Item.Settings().fireproof().rarity(Rarity.UNCOMMON)).rarity(Rarity.EPIC));
 
     // Armor
     public static final Identifier HEXTECH_ARMOR_PATH = Identifier.of(HextechMod.MOD_ID, "hextech");

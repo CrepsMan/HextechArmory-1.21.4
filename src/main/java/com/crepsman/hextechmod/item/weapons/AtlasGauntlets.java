@@ -1,6 +1,5 @@
 package com.crepsman.hextechmod.item.weapons;
 
-import com.crepsman.hextechmod.client.GauntletAnimationManager;
 import com.crepsman.hextechmod.util.HextechPowerUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.DataComponentTypes;
@@ -49,6 +48,7 @@ public class AtlasGauntlets extends BowItem {
     private static final int BLOCKING_POWER_COST_PER_TICK = 1; // Power cost per tick while blocking
     private static boolean useOffhand = true;
     private static final Map<UUID, Boolean> playerBlockingStates = new HashMap<>();
+    private static final Map<UUID, Long> playerBlockingStartTimes = new HashMap<>();
 
     public AtlasGauntlets(float attackDamage, float attackSpeed, Settings settings) {
         super(settings.maxDamage(450));
@@ -82,46 +82,88 @@ public class AtlasGauntlets extends BowItem {
         settings.component(DataComponentTypes.ATTRIBUTE_MODIFIERS, attributeModifiers);
     }
 
-    // In AtlasGauntlets.java
-    @Override
-    public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        // Toggle the attacking hand for animation
-        if (!user.getWorld().isClient()) {
-            // Server-side logic remains the same
-            useOffhand = !useOffhand;
-        } else {
-            // Client-side animation toggle
-            GauntletAnimationManager.toggleAttackingHand();
+    public static void performDash(PlayerEntity player, double dashDistance) {
+        if (playerBlockingStates.getOrDefault(player.getUuid(), false)) {
+            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.cant_dash_while_blocking"), true);
+            return;
         }
 
-        // Rest of your existing code
-        boolean hasMainHandGauntlet = user.getMainHandStack().getItem() instanceof AtlasGauntlets;
-        boolean hasOffHandGauntlet = user.getOffHandStack().getItem() instanceof AtlasGauntlets;
+        // Get player's hand items
+        ItemStack mainHandStack = player.getMainHandStack();
+        ItemStack offHandStack = player.getOffHandStack();
 
-        if (hasMainHandGauntlet && hasOffHandGauntlet) {
-            user.getWorld().playSound(null, user.getX(), user.getY(), user.getZ(),
-                    SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.PLAYERS, 0.8f, 1.2f);
+        // Check if player has gauntlets
+        ItemStack gauntletStack = null;
+
+        boolean isMainHandGauntlet = mainHandStack.getItem() instanceof AtlasGauntlets;
+        boolean isOffHandGauntlet = offHandStack.getItem() instanceof AtlasGauntlets;
+
+        if (isMainHandGauntlet) {
+            gauntletStack = mainHandStack;
+        } else if (isOffHandGauntlet) {
+            gauntletStack = offHandStack;
         }
 
-        return super.useOnEntity(stack, user, entity, hand);
+        if (gauntletStack == null) {
+            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.need_gauntlet"), true);
+            return;
+        }
+
+        // Check cooldown first - important to check before consuming power
+        if (!player.isCreative() && player.getItemCooldownManager().isCoolingDown(gauntletStack)) {
+            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.cooldown"), true);
+            return;
+        }
+
+        // Check for power - require 50 power to dash
+        int dashCost = 50;
+        if (!player.isCreative() && !HextechPowerUtils.hasPower(gauntletStack, dashCost)) {
+            player.sendMessage(Text.translatable("message.hextechmod.not_enough_power"), true);
+            return;
+        }
+
+        // Pre-dash effects and velocity calculation
+        if (player.getWorld() instanceof ServerWorld serverWorld) {
+            // Initial dash sound and particles
+            serverWorld.playSound(null, player.getX(), player.getY(), player.getZ(),
+                    SoundEvents.ENTITY_ILLUSIONER_PREPARE_MIRROR, SoundCategory.PLAYERS, 0.6f, 1.5f);
+
+            serverWorld.spawnParticles(
+                    ParticleTypes.ELECTRIC_SPARK,
+                    player.getX(), player.getY() + 1.0, player.getZ(),
+                    30, 0.3, 0.3, 0.3, 0.1
+            );
+        }
+
+        // Apply Jump Boost effect to cancel fall damage
+        player.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 10, 255, false, false, false));
+        player.fallDistance = 0.0F;
+
+        // Calculate dash direction and apply velocity
+        Vec3d lookDir = player.getRotationVector();
+        player.setVelocity(
+                lookDir.x * dashDistance,
+                lookDir.y * dashDistance,
+                lookDir.z * dashDistance
+        );
+        player.velocityModified = true;
+
+        // Consume power and apply cooldown
+        if (!player.isCreative()) {
+            HextechPowerUtils.consumePower(gauntletStack, dashCost);
+            // Set cooldown using the Item from the ItemStack
+            player.getItemCooldownManager().set(gauntletStack, 40);
+        }
+
+        player.sendMessage(Text.translatable("message.hextechmod.gauntlets.dash"), true);
     }
 
     @Override
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
 
-        // Check if player has gauntlets in both hands
-        boolean hasMainHandGauntlet = user.getMainHandStack().getItem() instanceof AtlasGauntlets;
-        boolean hasOffHandGauntlet = user.getOffHandStack().getItem() instanceof AtlasGauntlets;
-
-        if (!(hasMainHandGauntlet && hasOffHandGauntlet)) {
-            user.sendMessage(Text.translatable("message.hextechmod.gauntlets.need_dual_gauntlets"), true);
-            return ActionResult.FAIL;
-        }
-
-        // Fix: Pass the ItemStack instead of 'this'
+        // Check cooldown on current gauntlet
         if (user.getItemCooldownManager().isCoolingDown(stack)) {
-            user.sendMessage(Text.translatable("message.hextechmod.gauntlets.cooldown"), true);
             return ActionResult.FAIL;
         }
 
@@ -131,132 +173,38 @@ public class AtlasGauntlets extends BowItem {
         }
 
         playerBlockingStates.put(user.getUuid(), true);
-
         user.setCurrentHand(hand);
-        user.sendMessage(Text.translatable("message.hextechmod.gauntlets.blocking_activated"), true);
         return ActionResult.CONSUME;
     }
 
-    public static void performDash(PlayerEntity player, double dashDistance) {
+    @Override
+    public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        if (!(user instanceof PlayerEntity player)) return false;
 
-        if (playerBlockingStates.getOrDefault(player.getUuid(), false)) {
-            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.cant_dash_while_blocking"), true);
-            return;
+        UUID playerId = player.getUuid();
+        playerBlockingStates.remove(playerId);
+
+        // Get actual blocking time from our tracking
+        Long startTime = playerBlockingStartTimes.remove(playerId);
+        if (startTime == null) return false;
+
+        int usedTime = (int)(world.getTime() - startTime);
+
+        // Apply cooldown only to the current gauntlet
+        int cooldownTicks = (usedTime >= MAX_USE_TIME) ? EXTENDED_COOLDOWN_TICKS : NORMAL_COOLDOWN_TICKS;
+        player.getItemCooldownManager().set(stack, cooldownTicks);
+
+        // Only show extended cooldown message if needed
+        if (usedTime >= MAX_USE_TIME) {
+            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.extended_cooldown"), true);
         }
 
-        // Check if player has gauntlets
-        ItemStack mainHandStack = player.getStackInHand(Hand.MAIN_HAND);
-        ItemStack offHandStack = player.getStackInHand(Hand.OFF_HAND);
-
-        boolean isMainHandGauntlet = mainHandStack.getItem() instanceof AtlasGauntlets;
-        boolean isOffHandGauntlet = offHandStack.getItem() instanceof AtlasGauntlets;
-        if (!(isMainHandGauntlet && isOffHandGauntlet)) {
-            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.need_dual_gauntlets"), true);
-            return;
-        }
-        if (isMainHandGauntlet && isOffHandGauntlet) {
-            // Get the gauntlets stack
-            ItemStack gauntletsStack = isMainHandGauntlet ? mainHandStack : offHandStack;
-
-            // Check cooldown first - important to check before consuming power
-            if (!player.isCreative() && player.getItemCooldownManager().isCoolingDown(gauntletsStack)) {
-                player.sendMessage(Text.translatable("message.hextechmod.gauntlets.cooldown"), true);
-                return;
-            }
-
-            // Check for power - require 50 power to dash
-            int dashCost = 50;
-            if (!player.isCreative() && !HextechPowerUtils.hasPower(gauntletsStack, dashCost)) {
-                player.sendMessage(Text.translatable("message.hextechmod.not_enough_power"), true);
-                return;
-            }
-
-            // Pre-dash effects - visual/audio cue that dash is starting
-            if (player.getWorld() instanceof ServerWorld serverWorld) {
-                // Initial dash sound
-                serverWorld.playSound(null, player.getX(), player.getY(), player.getZ(),
-                        SoundEvents.ENTITY_ILLUSIONER_PREPARE_MIRROR, SoundCategory.PLAYERS, 0.6f, 1.5f);
-
-                // Initial particle burst
-                serverWorld.spawnParticles(
-                        ParticleTypes.ELECTRIC_SPARK,
-                        player.getX(), player.getY() + 1.0, player.getZ(),
-                        30, 0.3, 0.3, 0.3, 0.1
-                );
-            }
-
-            // Apply Jump Boost effect with high amplifier to cancel fall damage
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 10, 255, false, false, false));
-
-            // Reset fall distance
-            player.fallDistance = 0.0F;
-
-            // Calculate dash direction and velocity
-            Vec3d lookDir = player.getRotationVector();
-
-            // Set player velocity exactly in the look direction
-            player.setVelocity(
-                    lookDir.x * dashDistance,
-                    lookDir.y * dashDistance,
-                    lookDir.z * dashDistance
-            );
-            player.velocityModified = true;
-
-            // Consume power
-            if (!player.isCreative()) {
-                HextechPowerUtils.consumePower(gauntletsStack, dashCost);
-                player.getItemCooldownManager().set(gauntletsStack, 40); // 2 second cooldown
-            }
-
-            // Enhanced animation effects
-            if (player.getWorld() instanceof ServerWorld serverWorld) {
-                // Create particle trail along the dash path
-                Vec3d startPos = player.getPos();
-                Vec3d endPos = startPos.add(lookDir.multiply(dashDistance));
-
-                for (int i = 0; i < 20; i++) {
-                    double progress = i / 20.0;
-                    Vec3d particlePos = startPos.lerp(endPos, progress);
-
-                    serverWorld.spawnParticles(
-                            ParticleTypes.ELECTRIC_SPARK,
-                            particlePos.x,
-                            particlePos.y + 1.0,
-                            particlePos.z,
-                            5, 0.1, 0.1, 0.1, 0.05
-                    );
-
-                    // Add cloud particles for the whoosh effect
-                    serverWorld.spawnParticles(
-                            ParticleTypes.CLOUD,
-                            particlePos.x,
-                            particlePos.y + 1.0,
-                            particlePos.z,
-                            3, 0.1, 0.1, 0.1, 0.02
-                    );
-                }
-
-                // Final burst at end position
-                serverWorld.spawnParticles(
-                        ParticleTypes.EXPLOSION,
-                        endPos.x,
-                        endPos.y + 1.0,
-                        endPos.z,
-                        1, 0, 0, 0, 0
-                );
-            }
-
-            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.dash"), true);
-        }
+        return true;
     }
 
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         tooltip.add(Text.empty());
-        tooltip.add(Text.translatable("item.hextechmod.atlas_gauntlets.tooltip").formatted(Formatting.GRAY));
-        tooltip.add(Text.translatable("item.hextechmod.atlas_gauntlets.mainhand").formatted(Formatting.BLUE));
-        tooltip.add(Text.translatable("item.hextechmod.atlas_gauntlets.offhand").formatted(Formatting.AQUA));
-        tooltip.add(Text.translatable("item.hextechmod.atlas_gauntlets.dual").formatted(Formatting.GOLD));
 
         // Display power if using HextechPowerUtils
         int power = HextechPowerUtils.getPower(stack);
@@ -276,11 +224,6 @@ public class AtlasGauntlets extends BowItem {
             // Apply damage with the correct method signature: ServerWorld, DamageSource, float
             ItemStack offhandStack = player.getOffHandStack();
             target.damage(serverWorld, player.getDamageSources().generic(), this.attackDamage);
-            if (offhandStack.getItem() instanceof AtlasGauntlets) {
-
-                // Apply 50% more damage when dual wielding
-                target.damage(serverWorld, player.getDamageSources().generic(), this.attackDamage * 0.5F);
-            }
         }
         return true;
     }
@@ -289,24 +232,40 @@ public class AtlasGauntlets extends BowItem {
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         if (!(user instanceof PlayerEntity player)) return;
 
+        UUID playerId = player.getUuid();
+
+        // Record start time when player begins blocking
+        if (!playerBlockingStartTimes.containsKey(playerId) && player.isUsingItem() && player.getActiveItem() == stack) {
+            playerBlockingStartTimes.put(playerId, world.getTime());
+        }
+
+        // Calculate how long the player has been blocking
+        long startTime = playerBlockingStartTimes.getOrDefault(playerId, world.getTime());
+        int timeUsed = (int)(world.getTime() - startTime);
+
         if (player.isUsingItem() && player.getActiveItem() == stack) {
-            // Calculate how long the item has been used (in ticks)
-            int usedTime = getMaxUseTime(stack) - remainingUseTicks;
-
-            // Auto-stop at 10 seconds (200 ticks)
-            if (usedTime >= ABSOLUTE_MAX_USE_TIME) {
-                player.sendMessage(Text.translatable("message.hextechmod.gauntlets.max_blocking_time"), true);
-                player.stopUsingItem(); // Force stop using
-                playerBlockingStates.remove(player.getUuid());
-
-                // Apply extended cooldown (14 seconds)
-                player.getItemCooldownManager().set(stack, EXTENDED_COOLDOWN_TICKS);
+            // Check for time = 1 and prevent usage
+            if (timeUsed <= 1) {
                 return;
             }
 
-            // Show warning at 5 seconds (100 ticks)
-            if (usedTime == MAX_USE_TIME) {
-                player.sendMessage(Text.translatable("message.hextechmod.gauntlets.max_blocking_time"), true);
+            // Force stop if we exceed the absolute max time
+            if (timeUsed >= ABSOLUTE_MAX_USE_TIME) {
+                // Force stop blocking
+                player.stopUsingItem();
+                player.clearActiveItem();
+                playerBlockingStates.put(playerId, false);
+                playerBlockingStartTimes.remove(playerId);
+
+                if (!world.isClient) {
+                    // Apply extended cooldown only to this gauntlet
+                    player.getItemCooldownManager().set(stack, EXTENDED_COOLDOWN_TICKS);
+
+                    player.sendMessage(Text.translatable("message.hextechmod.gauntlets.max_blocking_time"), true);
+                    world.playSound(null, player.getX(), player.getY(), player.getZ(),
+                            SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, 0.6f, 1.2f);
+                }
+                return;
             }
 
             // Power consumption logic
@@ -319,31 +278,21 @@ public class AtlasGauntlets extends BowItem {
                     }
                 } else {
                     player.sendMessage(Text.translatable("message.hextechmod.not_enough_power"), true);
+
+                    // Apply cooldown only to the active gauntlet
                     player.getItemCooldownManager().set(stack, NORMAL_COOLDOWN_TICKS / 2);
+
                     player.stopUsingItem();
+                    playerBlockingStates.put(playerId, false);
+                    playerBlockingStartTimes.remove(playerId);
                     return;
                 }
             }
-        }
-    }
-
-    @Override
-    public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (!(user instanceof PlayerEntity player)) return false;
-        playerBlockingStates.remove(player.getUuid());
-
-        int usedTime = getMaxUseTime(stack) - remainingUseTicks;
-
-        if (usedTime >= MAX_USE_TIME) {
-            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.extended_cooldown"), true);
-            player.getItemCooldownManager().set(stack, EXTENDED_COOLDOWN_TICKS);
         } else {
-            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.normal_cooldown"), true);
-            player.getItemCooldownManager().set(stack, NORMAL_COOLDOWN_TICKS);
+            // Player stopped using item
+            playerBlockingStartTimes.remove(playerId);
         }
-        return true;
     }
-
     // Add helper method to check if a player is blocking
     public static boolean isPlayerBlocking(PlayerEntity player) {
         return playerBlockingStates.getOrDefault(player.getUuid(), false);
@@ -402,44 +351,58 @@ public class AtlasGauntlets extends BowItem {
         return isWorn;
     }
 
-    public static void enhancePickaxe(PlayerEntity player, World world, BlockPos pos, Direction side) {
-        if (isWornInOffhand(player)) {
-            ItemStack mainHandStack = player.getStackInHand(Hand.MAIN_HAND);
-            if (mainHandStack.getItem() == Items.DIAMOND_PICKAXE || mainHandStack.getItem() == Items.NETHERITE_PICKAXE) {
-                List<BlockPos> blocksToBeDestroyed = getBlocksToBeDestroyed(1, pos, (ServerPlayerEntity) player);
-                blocksToBeDestroyed.forEach(blockPos -> {
-                    boolean success = world.breakBlock(blockPos, true, player);
-                });
-            }
-        }
-    }
-
-    public static List<BlockPos> getBlocksToBeDestroyed(int range, BlockPos initialBlockPos, ServerPlayerEntity player) {
+    public static List<BlockPos> getBlocksToBeDestroyed(int range, BlockPos initalBlockPos, ServerPlayerEntity player) {
         List<BlockPos> positions = new ArrayList<>();
+
+        // Check if Atlas Gauntlets are in the off-hand
+        if (!isWornInOffhand(player)) {
+            return positions;
+        }
+
+        ItemStack mainHandStack = player.getStackInHand(Hand.MAIN_HAND);
+        Item mainHandItem = mainHandStack.getItem();
+
+        // Validate the tool type
+        boolean isValidTool = (
+                mainHandItem == Items.DIAMOND_PICKAXE || mainHandItem == Items.NETHERITE_PICKAXE ||
+                        mainHandItem == Items.DIAMOND_SHOVEL || mainHandItem == Items.NETHERITE_SHOVEL ||
+                        mainHandItem == Items.DIAMOND_AXE || mainHandItem == Items.NETHERITE_AXE
+        );
+
+        if (!isValidTool) {
+            return positions;
+        }
+
+        World world = player.getWorld();
+        BlockState state = world.getBlockState(initalBlockPos);
+        if (!mainHandStack.isSuitableFor(state)) {
+            return positions;
+        }
+
         HitResult hit = player.raycast(20, 0, false);
         if (hit.getType() == HitResult.Type.BLOCK) {
             BlockHitResult blockHit = (BlockHitResult) hit;
 
-            if (blockHit.getSide() == Direction.DOWN || blockHit.getSide() == Direction.UP) {
-                for (int x = -range; x <= range; x++) {
-                    for (int y = -range; y <= range; y++) {
-                        positions.add(new BlockPos(initialBlockPos.getX() + x, initialBlockPos.getY(), initialBlockPos.getZ() + y));
+            if(blockHit.getSide() == Direction.DOWN || blockHit.getSide() == Direction.UP) {
+                for(int x = -range; x <= range; x++) {
+                    for(int y = -range; y <= range; y++) {
+                        positions.add(new BlockPos(initalBlockPos.getX() + x, initalBlockPos.getY(), initalBlockPos.getZ() + y));
                     }
                 }
             }
 
-            if (blockHit.getSide() == Direction.NORTH || blockHit.getSide() == Direction.SOUTH) {
-                for (int x = -range; x <= range; x++) {
-                    for (int y = -range; y <= range; y++) {
-                        positions.add(new BlockPos(initialBlockPos.getX() + x, initialBlockPos.getY() + y, initialBlockPos.getZ()));
+            if(blockHit.getSide() == Direction.NORTH || blockHit.getSide() == Direction.SOUTH) {
+                for(int x = -range; x <= range; x++) {
+                    for(int y = -range; y <= range; y++) {
+                        positions.add(new BlockPos(initalBlockPos.getX() + x, initalBlockPos.getY() + y, initalBlockPos.getZ()));
                     }
                 }
             }
 
-            if (blockHit.getSide() == Direction.EAST || blockHit.getSide() == Direction.WEST) {
-                for (int x = -range; x <= range; x++) {
-                    for (int y = -range; y <= range; y++) {
-                        positions.add(new BlockPos(initialBlockPos.getX(), initialBlockPos.getY() + y, initialBlockPos.getZ() + x));
+            if(blockHit.getSide() == Direction.EAST || blockHit.getSide() == Direction.WEST) {
+                for(int x = -range; x <= range; x++) {
+                    for(int y = -range; y <= range; y++) {
+                        positions.add(new BlockPos(initalBlockPos.getX(), initalBlockPos.getY() + y, initalBlockPos.getZ() + x));
                     }
                 }
             }

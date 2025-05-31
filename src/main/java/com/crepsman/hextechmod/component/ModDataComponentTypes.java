@@ -6,7 +6,6 @@ import net.minecraft.component.ComponentType;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.dynamic.Codecs;
 
 import java.util.function.UnaryOperator;
 

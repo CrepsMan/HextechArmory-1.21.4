@@ -8,71 +8,58 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
-public class PlayerEntityMixin {
-    // Flag to prevent recursion
-    private static boolean IS_IN_DAMAGE_HANDLER = false;
-
+public abstract class PlayerEntityMixin {
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     private void onDamage(ServerWorld world, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        // Skip if we're already processing damage to prevent recursion
-        if (IS_IN_DAMAGE_HANDLER) {
-            return;
-        }
+        PlayerEntity player = (PlayerEntity) (Object) this;
 
-        PlayerEntity player = (PlayerEntity)(Object)this;
-
-        // Check if player is blocking with gauntlets
         if (AtlasGauntlets.isPlayerBlocking(player)) {
             boolean hasMainHandGauntlet = player.getMainHandStack().getItem() instanceof AtlasGauntlets;
             boolean hasOffHandGauntlet = player.getOffHandStack().getItem() instanceof AtlasGauntlets;
 
-            if (hasMainHandGauntlet && hasOffHandGauntlet) {
-                // Handle projectiles - block them completely
+            if (hasMainHandGauntlet) {
                 if (DamadgeSourceUtils.isProjectile(source)) {
-                    // Play deflection sound
+                    // Block projectile completely
                     player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(),
                             SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.PLAYERS, 1.0f, 1.2f);
 
-                    // Create particle effect for the deflection
                     if (player.getWorld() instanceof ServerWorld serverWorld) {
-                        serverWorld.spawnParticles(
-                                ParticleTypes.CRIT,
-                                player.getX(), player.getY() + 1.0, player.getZ(),
-                                15, 0.5, 0.5, 0.5, 0.1
-                        );
+                        serverWorld.spawnParticles(ParticleTypes.CRIT, player.getX(), player.getY() + 1.0, player.getZ(),
+                                15, 0.5, 0.5, 0.5, 0.1);
                     }
 
-                    cir.setReturnValue(false); // Cancel damage completely
+                    cir.setReturnValue(false); // cancel damage entirely
                     return;
                 }
 
-                // Reduce other damage types by half
+                // Half damage
                 float reducedAmount = amount * 0.5f;
 
-                // Play blocking sound
+                // Apply reduced damage directly by setting health manually
+                float newHealth = player.getHealth() - reducedAmount;
+                if (newHealth <= 0.0F) {
+                    player.setHealth(0.0F);
+                    player.onDeath(source);
+                } else {
+                    player.setHealth(newHealth);
+                }
+
+                // Play sound and particles
                 player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.PLAYERS, 0.8f, 0.8f);
 
-                // Apply reduced damage with recursion protection
-                IS_IN_DAMAGE_HANDLER = true;
-                try {
-                    if (player.getWorld() instanceof ServerWorld serverWorld) {
-                        boolean result = player.damage(serverWorld, source, reducedAmount);
-                        cir.setReturnValue(result);
-                    } else {
-                        // Handle client-side case
-                        cir.setReturnValue(true);
-                    }
-                } finally {
-                    IS_IN_DAMAGE_HANDLER = false;
+                if (player.getWorld() instanceof ServerWorld serverWorld) {
+                    serverWorld.spawnParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 1.0, player.getZ(),
+                            10, 0.3, 0.3, 0.3, 0.05);
                 }
+
+                cir.setReturnValue(true); // We handled the damage
             }
         }
     }

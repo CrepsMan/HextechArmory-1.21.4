@@ -2,7 +2,7 @@
   "credit": "Made with Blockbench of MrGummy",
   "texture_size": [128, 128],
   "textures": {
-    "0": "hextechmod:item/hextech_hammer"
+    "0": "hextechmod:item/mercury_hammer"
   },
   "elements": [
     {

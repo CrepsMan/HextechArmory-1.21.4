@@ -2,18 +2,13 @@ package com.crepsman.hextechmod.util;
 
 import com.crepsman.hextechmod.HextechMod;
 import com.crepsman.hextechmod.client.GauntletAnimationManager;
-import com.crepsman.hextechmod.item.weapons.AtlasGauntlets;
-import com.crepsman.hextechmod.network.NetworkHandler;
 import com.crepsman.hextechmod.network.packet.DashC2SPacket;
 import com.crepsman.hextechmod.network.packet.PowerC2SPacket;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Hand;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyBindingHandler {

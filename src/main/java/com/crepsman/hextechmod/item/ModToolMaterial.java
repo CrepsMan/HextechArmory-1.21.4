@@ -4,7 +4,6 @@ import com.crepsman.hextechmod.util.ModTags;
 import net.minecraft.item.Item;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.ItemTags;
 
 public interface ModToolMaterial {
     // Define a specialized material for Hextech items

@@ -1,13 +1,9 @@
 package com.crepsman.hextechmod.event;
 
 import com.crepsman.hextechmod.item.weapons.AtlasGauntlets;
-import com.crepsman.hextechmod.util.DamadgeSourceUtils;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 

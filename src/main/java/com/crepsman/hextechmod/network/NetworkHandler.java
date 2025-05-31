@@ -1,9 +1,7 @@
 package com.crepsman.hextechmod.network;
 
 import com.crepsman.hextechmod.HextechMod;
-import com.crepsman.hextechmod.item.weapons.HextechHammer;
 import com.crepsman.hextechmod.network.packet.DashC2SPacket;
-import com.crepsman.hextechmod.network.packet.PowerC2SPacket;
 import com.crepsman.hextechmod.network.packet.PowerC2SPacket;
 import com.crepsman.hextechmod.util.HextechPowerUtils;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;

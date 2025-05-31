@@ -2,12 +2,9 @@ package com.crepsman.hextechmod.item;
 
 import com.crepsman.hextechmod.HextechMod;
 import com.crepsman.hextechmod.util.ModTags;
-import com.google.common.base.Supplier;
 import net.minecraft.item.equipment.ArmorMaterial;
 import net.minecraft.item.equipment.EquipmentType;
-import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;

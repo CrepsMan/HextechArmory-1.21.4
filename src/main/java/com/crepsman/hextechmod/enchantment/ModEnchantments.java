@@ -1,14 +1,9 @@
 package com.crepsman.hextechmod.enchantment;
 
-import com.crepsman.hextechmod.HextechMod;
-import com.crepsman.hextechmod.util.ModTags;
-import net.minecraft.component.EnchantmentEffectComponentTypes;
-import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
 
 public class ModEnchantments {
     /*public static final RegistryKey<Enchantment> DASH =

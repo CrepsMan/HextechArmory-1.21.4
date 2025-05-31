@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
-	"id": "hextechmod",
+	"id": "hextech-armory",
 	"version": "${version}",
-	"name": "Hextech Mod",
-	"description": "This is a Hextech Mod!",
+	"name": "Hextech Armory",
+	"description": "This is a Hextech Armory Mod!",
 	"authors": [
 		"CrepsMan"
 	],

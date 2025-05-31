@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "hextechmod:item/hextech_hammer_head"
+    "layer0": "hextechmod:item/mercury_hammer_head"
   }
 }

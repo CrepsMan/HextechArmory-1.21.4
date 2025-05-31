@@ -9,6 +9,7 @@ import com.crepsman.hextechmod.network.NetworkHandler;
 import com.crepsman.hextechmod.util.GauntlestsUsageEvent;
 import com.crepsman.hextechmod.util.KeyBindingHandler;
 import com.crepsman.hextechmod.component.ModDataComponentTypes;
+import com.crepsman.hextechmod.util.ModLootTableModifiers;
 import com.crepsman.hextechmod.util.ModTags;
 import com.crepsman.hextechmod.world.gen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
@@ -40,6 +41,7 @@ public class HextechMod implements ModInitializer {
 		ModScreenHandlers.registerAll();
 		NetworkHandler.registerC2SPackets();
 		ModEventHandlers.register();
+		ModLootTableModifiers.modifyLootTables();
 
 	}
 	public static Identifier identifierOf(String name) {

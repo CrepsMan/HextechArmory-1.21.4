@@ -1,8 +1,5 @@
 package com.crepsman.hextechmod.network.packet;
 
-import com.crepsman.hextechmod.HextechMod;
-import com.crepsman.hextechmod.item.weapons.HextechHammer;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;

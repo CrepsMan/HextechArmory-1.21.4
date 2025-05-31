@@ -1,7 +1,5 @@
 package com.crepsman.hextechmod.client;
 
-import net.minecraft.client.MinecraftClient;
-
 public class GauntletAnimationManager {
     private static boolean isCharging = false;
     private static float chargeScale = 1.0f;

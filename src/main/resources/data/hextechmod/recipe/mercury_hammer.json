@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "hextechmod:mercury_hammer_head",
+  "base": "hextechmod:hextech_handle",
+  "result": {
+    "count": 1,
+    "id": "hextechmod:mercury_hammer"
+  },
+  "template": "hextechmod:mercury_hammer_combiner_smithing_template"
+}
