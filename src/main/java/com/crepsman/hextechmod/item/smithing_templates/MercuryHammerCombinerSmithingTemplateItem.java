@@ -35,7 +35,7 @@ public class MercuryHammerCombinerSmithingTemplateItem extends SmithingTemplateI
         HEXTECH_COMBINER_BASE_SLOT_DESCRIPTION_TEXT = Text.translatable(Util.createTranslationKey("item", Identifier.tryParse(HextechMod.MOD_ID,"smithing_template.hextech_combiner.base_slot_description")));
         HEXTECH_COMBINER_ADDITIONS_SLOT_DESCRIPTION_TEXT = Text.translatable(Util.createTranslationKey("item", Identifier.tryParse(HextechMod.MOD_ID,"smithing_template.hextech_combiner.additions_slot_description")));
         EMPTY_SLOT_HEXTECH_HANDLE = Identifier.tryParse(HextechMod.MOD_ID, "container/slot/empty_handle");
-        EMPTY_SLOT_MERCURY_HAMMER_HEAD = Identifier.ofVanilla("container/slot/empty_mercury_head");
+        EMPTY_SLOT_MERCURY_HAMMER_HEAD = Identifier.tryParse( HextechMod.MOD_ID, "container/slot/empty_head");
     }
 
 

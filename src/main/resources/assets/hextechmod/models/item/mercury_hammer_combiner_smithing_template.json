@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hextechmod:item/mercury_hammer_combiner_smithing_template"
+  }
+}

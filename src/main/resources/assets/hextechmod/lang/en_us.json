@@ -22,8 +22,8 @@
 
   "item.hextechmod.raw_titanium_block": "Raw Titanium Block",
   "item.hextechmod.titanium_block": "Titanium Block",
-  "item.hextechmod.titanium_ore_block": "Titanium Ore Block",
-  "item.hextechmod.titanium_deepslate_ore_block": "Titanium Deepslate Ore Block",
+  "item.hextechmod.titanium_ore": "Titanium Ore Block",
+  "item.hextechmod.titanium_deepslate_ore": "Titanium Deepslate Ore Block",
 
   "itemgroup.hextechmod.hextech_blocks": "Hextech Blocks",
   "itemgroup.hextechmod.hextech_items": "Hextech Items",

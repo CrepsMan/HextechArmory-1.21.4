@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "hextechmod:block/titanium_ore_block"
+    "all": "hextechmod:block/titanium_deepslate_ore"
   }
 }

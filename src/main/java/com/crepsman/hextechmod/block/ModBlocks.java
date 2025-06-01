@@ -16,10 +16,10 @@ import net.minecraft.util.Pair;
 import java.util.function.Function;
 
 public class ModBlocks {
-    public static final Block TITANIUM_ORE_BLOCK = registerBlockWithItem("titanium_ore_block", Block::new, AbstractBlock.Settings.copy(Blocks.NETHERITE_BLOCK)).getLeft();
+    public static final Block TITANIUM_ORE = registerBlockWithItem("titanium_ore", Block::new, AbstractBlock.Settings.copy(Blocks.NETHERITE_BLOCK)).getLeft();
     public static final Block TITANIUM_BLOCK = registerBlockWithItem("titanium_block", Block::new, AbstractBlock.Settings.copy(Blocks.NETHERITE_BLOCK)).getLeft();
     public static final Block RAW_TITANIUM_BLOCK = registerBlockWithItem("raw_titanium_block", Block::new, AbstractBlock.Settings.copy(Blocks.NETHERITE_BLOCK)).getLeft();
-    public static final Block TITANIUM_DEEPSLATE_ORE_BLOCK = registerBlockWithItem("titanium_deepslate_ore_block", Block::new, AbstractBlock.Settings.copy(Blocks.NETHERITE_BLOCK)).getLeft();
+    public static final Block TITANIUM_DEEPSLATE_ORE = registerBlockWithItem("titanium_deepslate_ore", Block::new, AbstractBlock.Settings.copy(Blocks.NETHERITE_BLOCK)).getLeft();
 
     public static void registerModBlock() {
 

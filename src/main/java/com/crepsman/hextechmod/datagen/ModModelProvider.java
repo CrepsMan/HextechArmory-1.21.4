@@ -20,8 +20,8 @@ public class ModModelProvider extends FabricModelProvider {
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_BLOCK);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.RAW_TITANIUM_BLOCK);
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_ORE_BLOCK);
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_DEEPSLATE_ORE_BLOCK);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_ORE);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_DEEPSLATE_ORE);
 
 
     }

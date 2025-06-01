@@ -1,6 +1,23 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "hextechmod:item/mercury_hammer"
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "hextechmod:item/mercury_hammer_small"
+        },
+        "when": [
+          "gui",
+          "ground",
+          "fixed"
+        ]
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "hextechmod:item/mercury_hammer"
+    },
+    "property": "minecraft:display_context"
   }
 }

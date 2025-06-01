@@ -17,12 +17,12 @@ import net.minecraft.world.gen.placementmodifier.PlacementModifier;
 import java.util.List;
 
 public class ModPlacedFeatures {
-    public static final RegistryKey<PlacedFeature> TITANIUM_ORE_BLOCK_PLACED_KEY = registerKey("titanium_ore_block_placed");
+    public static final RegistryKey<PlacedFeature> TITANIUM_ore_PLACED_KEY = registerKey("titanium_ore_placed");
 
     public static void bootstrap(Registerable<PlacedFeature> context) {
         var configuredFeatures = context.getRegistryLookup(RegistryKeys.CONFIGURED_FEATURE);
 
-        register(context, TITANIUM_ORE_BLOCK_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.TITANIUM_ORE_BLOCK_KEY),
+        register(context, TITANIUM_ore_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.TITANIUM_ore_KEY),
                 ModOrePlacement.modifiersWithCount(4,
                         HeightRangePlacementModifier.trapezoid(YOffset.fixed(-80), YOffset.fixed(0))));
 
