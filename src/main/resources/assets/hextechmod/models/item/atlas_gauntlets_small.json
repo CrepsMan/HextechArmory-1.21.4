@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "hextechmod:item/mercury_hammer_handle"
+    "layer0": "hextechmod:item/atlas_gauntlets_small"
   }
 }

@@ -1,8 +1,8 @@
 {
   "values": [
     "hextechmod:titanium_block",
-    "hextechmod:titanium_ore_block",
-    "hextechmod:titanium_deepslate_ore_block",
+    "hextechmod:titanium_ore",
+    "hextechmod:titanium_deepslate_ore",
     "hextechmod:raw_titanium_block"
   ]
 }

@@ -18,16 +18,16 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
         //Blocks
                 .add(ModBlocks.TITANIUM_BLOCK)
-                .add(ModBlocks.TITANIUM_ORE_BLOCK)
-                .add(ModBlocks.TITANIUM_DEEPSLATE_ORE_BLOCK)
+                .add(ModBlocks.TITANIUM_ORE)
+                .add(ModBlocks.TITANIUM_DEEPSLATE_ORE)
                 .add(ModBlocks.RAW_TITANIUM_BLOCK);
 
 
         getOrCreateTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL)
         //Blocks
                 .add(ModBlocks.TITANIUM_BLOCK)
-                .add(ModBlocks.TITANIUM_ORE_BLOCK)
-                .add(ModBlocks.TITANIUM_DEEPSLATE_ORE_BLOCK)
+                .add(ModBlocks.TITANIUM_ORE)
+                .add(ModBlocks.TITANIUM_DEEPSLATE_ORE)
                 .add(ModBlocks.RAW_TITANIUM_BLOCK);
 
 

@@ -44,10 +44,10 @@ public class ModItemGroups {
                     .icon(() -> new ItemStack(ModBlocks.TITANIUM_BLOCK)) // Set the icon to one of your custom items
                     .entries((displayContext, entries) -> {
                         // Add your custom items here
-                        entries.add(ModBlocks.TITANIUM_ORE_BLOCK);
+                        entries.add(ModBlocks.TITANIUM_ORE);
                         entries.add(ModBlocks.TITANIUM_BLOCK);
                         entries.add(ModBlocks.RAW_TITANIUM_BLOCK);
-                        entries.add(ModBlocks.TITANIUM_DEEPSLATE_ORE_BLOCK);
+                        entries.add(ModBlocks.TITANIUM_DEEPSLATE_ORE);
                     }).build());
 
     public static void registerItemGroups() {

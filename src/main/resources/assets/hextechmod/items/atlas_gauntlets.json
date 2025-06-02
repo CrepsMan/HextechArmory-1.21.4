@@ -1,6 +1,23 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "hextechmod:item/atlas_gauntlets"
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "hextechmod:item/atlas_gauntlets_small"
+        },
+        "when": [
+          "gui",
+          "ground",
+          "fixed"
+        ]
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "hextechmod:item/atlas_gauntlets"
+    },
+    "property": "minecraft:display_context"
   }
 }

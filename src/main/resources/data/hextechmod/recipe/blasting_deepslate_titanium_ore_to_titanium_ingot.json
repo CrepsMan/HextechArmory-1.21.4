@@ -1,6 +1,6 @@
 {
   "type": "minecraft:blasting",
-  "ingredient": "hextechmod:titanium_deepslate_ore_block",
+  "ingredient": "hextechmod:titanium_deepslate_ore",
   "result": {
     "id": "hextechmod:titanium_ingot"
   },
