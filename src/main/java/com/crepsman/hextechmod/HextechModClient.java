@@ -1,5 +1,6 @@
 package com.crepsman.hextechmod;
 
+import com.crepsman.hextechmod.client.DashChargingHandler;
 import com.crepsman.hextechmod.client.GauntletAnimationManager;
 import com.crepsman.hextechmod.item.ModItems;
 import net.fabricmc.api.ClientModInitializer;
@@ -13,6 +14,9 @@ public class HextechModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        DashChargingHandler.register();
+
+
         // Register client tick event for animations
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // Update all animations each tick

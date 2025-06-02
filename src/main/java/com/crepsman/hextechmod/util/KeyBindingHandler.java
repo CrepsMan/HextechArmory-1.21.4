@@ -1,7 +1,6 @@
 package com.crepsman.hextechmod.util;
 
 import com.crepsman.hextechmod.HextechMod;
-import com.crepsman.hextechmod.client.GauntletAnimationManager;
 import com.crepsman.hextechmod.network.packet.DashC2SPacket;
 import com.crepsman.hextechmod.network.packet.PowerC2SPacket;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -18,8 +17,6 @@ public class KeyBindingHandler {
 
     public static KeyBinding empowerItemKey;
     public static KeyBinding dashKey;
-    private static boolean isDashKeyPressed = false;
-    private static int dashChargeTime = 0;
 
     public static void register() {
         empowerItemKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -43,31 +40,11 @@ public class KeyBindingHandler {
                     ClientPlayNetworking.send(new PowerC2SPacket());
                 }
             }
-
-            // In KeyBindingHandler.java
-
-            if (dashKey.isPressed() && !isDashKeyPressed) {
-                isDashKeyPressed = true;
-                dashChargeTime = 0;
-                DashChargeManager.startCharging(client.player);
-                GauntletAnimationManager.startCharging(); // Add this
-            }
-
-// While key is held - increment charge
-            if (dashKey.isPressed() && isDashKeyPressed) {
-                dashChargeTime++;
-                DashChargeManager.incrementCharge(client.player);
-                float chargeProgress = Math.min(dashChargeTime, 60) / 60.0f;
-                GauntletAnimationManager.updateCharge(chargeProgress); // Add this
-            }
-
-// When key is released - perform dash
-            if (!dashKey.isPressed() && isDashKeyPressed) {
-                isDashKeyPressed = false;
-                ClientPlayNetworking.send(new DashC2SPacket(dashChargeTime));
-                GauntletAnimationManager.endCharging(); // Add this
-                dashChargeTime = 0;
-            }
         });
+    }
+
+    // Method to send the dash packet with charge time
+    public static void sendDashPacket(int chargeTime) {
+        ClientPlayNetworking.send(new DashC2SPacket(chargeTime));
     }
 }
