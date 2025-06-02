@@ -135,8 +135,6 @@ public class AtlasGauntlets extends BowItem {
             );
         }
 
-        // Apply Jump Boost effect to cancel fall damage
-        player.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 10, 255, false, false, false));
         player.fallDistance = 0.0F;
 
         // Calculate dash direction and apply velocity
