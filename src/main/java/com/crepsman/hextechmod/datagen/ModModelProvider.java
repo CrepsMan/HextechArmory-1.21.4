@@ -33,7 +33,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.UNREFINED_HEXTECH_CRYSTAL, Models.GENERATED);
         itemModelGenerator.register(ModItems.UNREFINED_HEXTECH_CRYSTAL_SHARD, Models.GENERATED);
         itemModelGenerator.register(ModItems.HEXTECH_CRYSTAL, Models.GENERATED);
-        itemModelGenerator.register(ModItems.HEXTECH_HANDLE, Models.GENERATED);
+        itemModelGenerator.register(ModItems.MERCURY_HAMMER_HANDLE, Models.GENERATED);
         itemModelGenerator.register(ModItems.MERCURY_HAMMER_HEAD, Models.GENERATED);
 
 

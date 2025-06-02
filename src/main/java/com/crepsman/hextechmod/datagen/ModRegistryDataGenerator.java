@@ -9,9 +9,6 @@ import net.minecraft.registry.RegistryWrapper;
 import java.util.concurrent.CompletableFuture;
 
 public class ModRegistryDataGenerator extends FabricDynamicRegistryProvider {
-    private Object registryLookup;
-
-
     public ModRegistryDataGenerator(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesLookup) {
         super(output, registriesLookup);
     }

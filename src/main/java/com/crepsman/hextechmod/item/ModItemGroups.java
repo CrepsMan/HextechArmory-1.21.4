@@ -24,7 +24,7 @@ public class ModItemGroups {
                         entries.add(ModItems.MERCURY_HAMMER);
                         entries.add(ModItems.TITANIUM_INGOT);
                         entries.add(ModItems.RAW_TITANIUM);
-                        entries.add(ModItems.HEXTECH_HANDLE);
+                        entries.add(ModItems.MERCURY_HAMMER_HANDLE);
                         entries.add(ModItems.MERCURY_HAMMER_HEAD);
                         entries.add(ModItems.MERCURY_HAMMER_COMBINER_SMITHING_TEMPLATE);
                         entries.add(ModItems.HEXTECH_HELMET);

@@ -28,7 +28,7 @@ public class ModItems {
     public static final Item RAW_TITANIUM = registerItem("raw_titanium", Item::new, new Item.Settings().fireproof().rarity(Rarity.RARE));
 
     //Parts
-    public static final Item HEXTECH_HANDLE = registerItem("hextech_handle", Item::new, new Item.Settings().fireproof().rarity(Rarity.RARE));
+    public static final Item MERCURY_HAMMER_HANDLE = registerItem("mercury_hammer_handle", Item::new, new Item.Settings().fireproof().rarity(Rarity.RARE));
     public static final Item MERCURY_HAMMER_HEAD = registerItem("mercury_hammer_head", Item::new, new Item.Settings().fireproof().rarity(Rarity.EPIC));
 
     //Smithing templates

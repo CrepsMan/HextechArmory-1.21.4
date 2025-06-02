@@ -17,7 +17,7 @@ import net.minecraft.world.gen.feature.OreFeatureConfig;
 import java.util.List;
 
 public class ModConfiguredFeatures {
-    public static final RegistryKey<ConfiguredFeature<?, ?>> TITANIUM_ore_KEY = registerKey("titanium_ore");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> TITANIUM_ORE_KEY = registerKey("titanium_ore");
 
 
 
@@ -30,7 +30,7 @@ public class ModConfiguredFeatures {
                 List.of(OreFeatureConfig.createTarget(stoneReplaceables, ModBlocks.TITANIUM_ORE.getDefaultState()),
                         OreFeatureConfig.createTarget(deepslateReplaceables, ModBlocks.TITANIUM_DEEPSLATE_ORE.getDefaultState()));
 
-        register(context, TITANIUM_ore_KEY, Feature.ORE, new OreFeatureConfig(overworldTitaniumOres, 4, 0.5F));
+        register(context, TITANIUM_ORE_KEY, Feature.ORE, new OreFeatureConfig(overworldTitaniumOres, 2, 0.5F));
     }
 
     public static RegistryKey<ConfiguredFeature<?, ?>> registerKey(String name) {

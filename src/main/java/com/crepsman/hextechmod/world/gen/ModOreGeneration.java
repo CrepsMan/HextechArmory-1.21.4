@@ -9,7 +9,7 @@ import com.crepsman.hextechmod.world.ModPlacedFeatures;
 public class ModOreGeneration {
     public static void generateOres() {
         BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Feature.UNDERGROUND_ORES,
-                ModPlacedFeatures.TITANIUM_ore_PLACED_KEY);
+                ModPlacedFeatures.TITANIUM_ORE_PLACED_KEY);
 
 
     }
