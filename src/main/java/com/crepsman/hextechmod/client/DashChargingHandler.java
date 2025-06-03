@@ -92,7 +92,7 @@ public class DashChargingHandler {
 
         // Set XP bar to show charge progress
         player.experienceProgress = chargeProgress;
-        player.experienceLevel = 0; // Hide level number, just show bar
+        player.experienceLevel = 0;
     }
 
     private static void restoreXpBar(PlayerEntity player) {

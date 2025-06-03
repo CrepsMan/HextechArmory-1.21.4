@@ -22,7 +22,7 @@ public class KeyBindingHandler {
         empowerItemKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 EMPOWER_ITEM,
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_E,
+                GLFW.GLFW_KEY_O,
                 CATEGORY
         ));
 

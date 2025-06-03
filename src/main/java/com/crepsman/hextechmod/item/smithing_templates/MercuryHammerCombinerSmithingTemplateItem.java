@@ -15,7 +15,7 @@ public class MercuryHammerCombinerSmithingTemplateItem extends SmithingTemplateI
     private static final Formatting DESCRIPTION_FORMATTING;
     private static final Text HEXTECH_COMBINER_APPLIES_TO_TEXT;
     private static final Text HEXTECH_COMBINER_INGREDIENTS_TEXT;
-    private static final Identifier EMPTY_SLOT_HEXTECH_HANDLE;
+    private static final Identifier EMPTY_SLOT_MERCURY_HAMMER_HANDLE;
     private static final Identifier EMPTY_SLOT_MERCURY_HAMMER_HEAD;
     private static final Text HEXTECH_COMBINER_BASE_SLOT_DESCRIPTION_TEXT;
     private static final Text HEXTECH_COMBINER_ADDITIONS_SLOT_DESCRIPTION_TEXT;
@@ -25,7 +25,7 @@ public class MercuryHammerCombinerSmithingTemplateItem extends SmithingTemplateI
     }
 
     public static SmithingTemplateItem createNetheriteUpgrade(Settings settings) {
-        return new SmithingTemplateItem(HEXTECH_COMBINER_APPLIES_TO_TEXT, HEXTECH_COMBINER_INGREDIENTS_TEXT, HEXTECH_COMBINER_BASE_SLOT_DESCRIPTION_TEXT, HEXTECH_COMBINER_ADDITIONS_SLOT_DESCRIPTION_TEXT, new ArrayList<Identifier>(Collections.singleton(EMPTY_SLOT_HEXTECH_HANDLE)), new ArrayList<Identifier>(Collections.singleton(EMPTY_SLOT_MERCURY_HAMMER_HEAD)), settings);
+        return new SmithingTemplateItem(HEXTECH_COMBINER_APPLIES_TO_TEXT, HEXTECH_COMBINER_INGREDIENTS_TEXT, HEXTECH_COMBINER_BASE_SLOT_DESCRIPTION_TEXT, HEXTECH_COMBINER_ADDITIONS_SLOT_DESCRIPTION_TEXT, new ArrayList<Identifier>(Collections.singleton(EMPTY_SLOT_MERCURY_HAMMER_HANDLE)), new ArrayList<Identifier>(Collections.singleton(EMPTY_SLOT_MERCURY_HAMMER_HEAD)), settings);
     }
 
     static {
@@ -34,7 +34,7 @@ public class MercuryHammerCombinerSmithingTemplateItem extends SmithingTemplateI
         HEXTECH_COMBINER_INGREDIENTS_TEXT = Text.translatable(Util.createTranslationKey("item", Identifier.tryParse(HextechMod.MOD_ID,"smithing_template.hextech_combiner.ingredients"))).formatted(DESCRIPTION_FORMATTING);
         HEXTECH_COMBINER_BASE_SLOT_DESCRIPTION_TEXT = Text.translatable(Util.createTranslationKey("item", Identifier.tryParse(HextechMod.MOD_ID,"smithing_template.hextech_combiner.base_slot_description")));
         HEXTECH_COMBINER_ADDITIONS_SLOT_DESCRIPTION_TEXT = Text.translatable(Util.createTranslationKey("item", Identifier.tryParse(HextechMod.MOD_ID,"smithing_template.hextech_combiner.additions_slot_description")));
-        EMPTY_SLOT_HEXTECH_HANDLE = Identifier.tryParse(HextechMod.MOD_ID, "container/slot/empty_handle");
+        EMPTY_SLOT_MERCURY_HAMMER_HANDLE = Identifier.tryParse(HextechMod.MOD_ID, "container/slot/empty_handle");
         EMPTY_SLOT_MERCURY_HAMMER_HEAD = Identifier.tryParse( HextechMod.MOD_ID, "container/slot/empty_head");
     }
 
