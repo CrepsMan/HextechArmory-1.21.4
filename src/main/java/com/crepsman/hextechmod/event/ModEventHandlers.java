@@ -10,31 +10,22 @@ import net.minecraft.util.Hand;
 public class ModEventHandlers {
     public static void register() {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
-            if (hand == Hand.MAIN_HAND && AtlasGauntlets.isWornInOffhand(player)) {
-                AtlasGauntlets gauntlets = (AtlasGauntlets) player.getStackInHand(Hand.OFF_HAND).getItem();
-                if (gauntlets.isBlocking()) {
-                    return ActionResult.FAIL;
-                }
+            if (hand == Hand.MAIN_HAND && AtlasGauntlets.isBlocking(player)) {
+                return ActionResult.FAIL;
             }
             return ActionResult.PASS;
         });
 
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            if (hand == Hand.MAIN_HAND && AtlasGauntlets.isWornInOffhand(player)) {
-                AtlasGauntlets gauntlets = (AtlasGauntlets) player.getStackInHand(Hand.OFF_HAND).getItem();
-                if (gauntlets.isBlocking()) {
-                    return ActionResult.FAIL;
-                }
+            if (hand == Hand.MAIN_HAND && AtlasGauntlets.isBlocking(player)) {
+                return ActionResult.FAIL;
             }
             return ActionResult.PASS;
         });
 
         UseItemCallback.EVENT.register((player, world, hand) -> {
-            if (hand == Hand.MAIN_HAND && AtlasGauntlets.isWornInOffhand(player)) {
-                AtlasGauntlets gauntlets = (AtlasGauntlets) player.getStackInHand(Hand.OFF_HAND).getItem();
-                if (gauntlets.isBlocking()) {
-                    return ActionResult.FAIL;
-                }
+            if (hand == Hand.MAIN_HAND && AtlasGauntlets.isBlocking(player)) {
+                return ActionResult.FAIL;
             }
             return ActionResult.PASS;
         });

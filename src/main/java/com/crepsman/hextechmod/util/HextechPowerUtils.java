@@ -138,8 +138,6 @@ public class HextechPowerUtils {
 
             player.sendMessage(Text.translatable(message, newPower), true);
 
-            HextechMod.LOGGER.info("Empowered {} to {} power",
-                    heldStack.getItem().toString(), newPower);
         } else {
             player.sendMessage(Text.translatable("message.hextechmod.not_empowerable"), true);
         }

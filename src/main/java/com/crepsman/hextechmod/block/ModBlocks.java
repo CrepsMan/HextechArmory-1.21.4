@@ -22,9 +22,6 @@ public class ModBlocks {
     public static final Block TITANIUM_DEEPSLATE_ORE = registerBlockWithItem("titanium_deepslate_ore", Block::new, AbstractBlock.Settings.copy(Blocks.NETHERITE_BLOCK)).getLeft();
 
     public static void registerModBlock() {
-
-
-
         HextechMod.LOGGER.info("Registering Mod Blocks for " + HextechMod.MOD_ID);
     }
 

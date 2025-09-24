@@ -18,6 +18,5 @@ public class ModDataComponentTypes {
     }
 
     public static void registerDataComponentTypes() {
-        HextechMod.LOGGER.info("Registering Mod Data Component Types for " + HextechMod.MOD_ID);
     }
 }

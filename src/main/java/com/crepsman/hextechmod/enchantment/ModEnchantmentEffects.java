@@ -13,6 +13,5 @@ public class ModEnchantmentEffects {
     }
 
     public static void registerEnchantmentEffects() {
-        HextechMod.LOGGER.info("Registering Mod Enchantment Effects for " + HextechMod.MOD_ID);
     }
 }

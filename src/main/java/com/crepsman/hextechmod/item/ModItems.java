@@ -62,7 +62,6 @@ public class ModItems {
     public static final Item UNREFINED_HEXTECH_CRYSTAL_SHARD = registerItem("unrefined_hextech_crystal_shard", Item::new, new Item.Settings().fireproof().rarity(Rarity.RARE));
 
 
-
     public static Item registerItem(String id, Function<Item.Settings, Item> factory, Item.Settings settings) {
         RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(HextechMod.MOD_ID, id));
         Item item = factory.apply(settings.registryKey(key));

@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -23,6 +24,7 @@ import java.util.Set;
 
 public class GauntlestsUsageEvent implements PlayerBlockBreakEvents.Before {
     private static final Set<BlockPos> HARVESTED_BLOCKS = new HashSet<>();
+    private static final int ENERGY_PER_BLOCK = 5; // Energy cost per additional block
 
     @Override
     public boolean beforeBlockBreak(World world, PlayerEntity player, BlockPos pos,
@@ -61,9 +63,37 @@ public class GauntlestsUsageEvent implements PlayerBlockBreakEvents.Before {
         // Get additional blocks to break based on the direction
         List<BlockPos> blocksToBreak = AtlasGauntlets.getBlocksToBeDestroyed(1, pos, serverPlayer);
 
-        // Break each valid block
+        // Skip additional blocks if there aren't any
+        if (blocksToBreak.size() <= 1) {
+            return true;
+        }
+
+        // Calculate power needed (excluding the original block)
+        int additionalBlocks = 0;
         for (BlockPos blockPos : blocksToBreak) {
-            // Skip the original block and invalid blocks
+            if (!blockPos.equals(pos)) {
+                BlockState blockState = world.getBlockState(blockPos);
+                if (mainHandStack.isSuitableFor(blockState)) {
+                    additionalBlocks++;
+                }
+            }
+        }
+
+        int powerRequired = additionalBlocks * ENERGY_PER_BLOCK;
+
+        // Check if we have enough power
+        if (!player.isCreative() && !HextechPowerUtils.hasPower(offHandItem, powerRequired)) {
+            if (!world.isClient) {
+                serverPlayer.sendMessage(Text.translatable("message.hextechmod.not_enough_power"), true);
+            }
+            return true;
+        }
+
+        // Break each valid block and consume power
+        int powerUsed = 0;
+
+        for (BlockPos blockPos : blocksToBreak) {
+            // Skip the original block
             if (blockPos.equals(pos)) {
                 continue;
             }
@@ -81,6 +111,19 @@ public class GauntlestsUsageEvent implements PlayerBlockBreakEvents.Before {
             // Damage the tool if not in creative
             if (!player.isCreative()) {
                 mainHandStack.damage(1, player, null);
+            }
+
+            // Count power used
+            powerUsed += ENERGY_PER_BLOCK;
+        }
+
+        // Deduct power from gauntlets
+        if (!player.isCreative() && powerUsed > 0) {
+            HextechPowerUtils.consumePower(offHandItem, powerUsed);
+
+            // Show remaining power to the player occasionally
+            if (world.getTime() % 20 == 0) {
+                HextechPowerUtils.sendPowerStatusMessage(player, offHandItem);
             }
         }
 

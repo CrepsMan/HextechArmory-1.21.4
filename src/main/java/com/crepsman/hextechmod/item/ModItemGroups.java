@@ -51,6 +51,6 @@ public class ModItemGroups {
                     }).build());
 
     public static void registerItemGroups() {
-        HextechMod.LOGGER.info("Registering An Item Group For " + HextechMod.MOD_ID);
+        // Logger removed: finished code should not log registration
     }
 }

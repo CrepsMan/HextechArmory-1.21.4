@@ -27,34 +27,22 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.HashMap;
-import java.util.Map;
+
+import com.crepsman.hextechmod.item.weapons.util.GauntletBlockingHandler;
 
 
-public class AtlasGauntlets extends BowItem {
+public class AtlasGauntlets extends Item {
     private float attackDamage;
     private float attackSpeed;
-    private boolean blocking;
-    private static final int NORMAL_COOLDOWN_TICKS = 140; // 7 seconds
-    private static final int EXTENDED_COOLDOWN_TICKS = 280; // 14 seconds (changed from 10 to 14 seconds)
-    private static final int MAX_USE_TIME = 100; // 5 seconds threshold for extended cooldown
-    private static final int ABSOLUTE_MAX_USE_TIME = 200; // 10 seconds for auto-stop
-    private static final int BLOCKING_POWER_COST_PER_TICK = 1; // Power cost per tick while blocking
     private static boolean useOffhand = true;
-    private static final Map<UUID, Boolean> playerBlockingStates = new HashMap<>();
-    private static final Map<UUID, Long> playerBlockingStartTimes = new HashMap<>();
 
     public AtlasGauntlets(float attackDamage, float attackSpeed, Settings settings) {
         super(settings.maxDamage(450));
         this.attackDamage = attackDamage;
         this.attackSpeed = attackSpeed;
-        this.blocking = false;
 
         // New component-based attribute system
         AttributeModifiersComponent attributeModifiers = AttributeModifiersComponent.builder()
@@ -83,11 +71,6 @@ public class AtlasGauntlets extends BowItem {
     }
 
     public static void performDash(PlayerEntity player, double dashDistance) {
-        if (playerBlockingStates.getOrDefault(player.getUuid(), false)) {
-            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.cant_dash_while_blocking"), true);
-            return;
-        }
-
         // Get player's hand items
         ItemStack mainHandStack = player.getMainHandStack();
         ItemStack offHandStack = player.getOffHandStack();
@@ -109,95 +92,67 @@ public class AtlasGauntlets extends BowItem {
             return;
         }
 
-        // Check cooldown first - important to check before consuming power
-        if (!player.isCreative() && player.getItemCooldownManager().isCoolingDown(gauntletStack)) {
-            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.cooldown"), true);
-            return;
-        }
+        if (player.isCreative() || HextechPowerUtils.hasPower(gauntletStack, 50)) {
+            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.dash"), true);
 
-        // Check for power - require 50 power to dash
-        int dashCost = 50;
-        if (!player.isCreative() && !HextechPowerUtils.hasPower(gauntletStack, dashCost)) {
-            player.sendMessage(Text.translatable("message.hextechmod.not_enough_power"), true);
-            return;
-        }
+            // Check cooldown first - important to check before consuming power
+            if (!player.isCreative() && player.getItemCooldownManager().isCoolingDown(gauntletStack)) {
+                player.sendMessage(Text.translatable("message.hextechmod.gauntlets.cooldown"), true);
+                return;
+            }
 
-        // Pre-dash effects and velocity calculation
-        if (player.getWorld() instanceof ServerWorld serverWorld) {
-            // Initial dash sound and particles
-            serverWorld.playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.ENTITY_ILLUSIONER_PREPARE_MIRROR, SoundCategory.PLAYERS, 0.6f, 1.5f);
+            // Pre-dash effects and velocity calculation
+            if (player.getWorld() instanceof ServerWorld serverWorld) {
+                // Initial dash sound and particles
+                serverWorld.playSound(null, player.getX(), player.getY(), player.getZ(),
+                        SoundEvents.ENTITY_ILLUSIONER_PREPARE_MIRROR, SoundCategory.PLAYERS, 0.6f, 1.5f);
 
-            serverWorld.spawnParticles(
-                    ParticleTypes.ELECTRIC_SPARK,
-                    player.getX(), player.getY() + 1.0, player.getZ(),
-                    30, 0.3, 0.3, 0.3, 0.1
+                serverWorld.spawnParticles(
+                        ParticleTypes.ELECTRIC_SPARK,
+                        player.getX(), player.getY() + 1.0, player.getZ(),
+                        30, 0.3, 0.3, 0.3, 0.1
+                );
+            }
+
+            player.fallDistance = 0.0F;
+
+            // Calculate dash direction and apply velocity
+            Vec3d lookDir = player.getRotationVector();
+            player.setVelocity(
+                    lookDir.x * dashDistance,
+                    lookDir.y * dashDistance,
+                    lookDir.z * dashDistance
             );
+            player.velocityModified = true;
+
+            // Consume power and apply cooldown
+            if (!player.isCreative()) {
+                HextechPowerUtils.consumePower(gauntletStack, 50);
+                // Set cooldown using the Item from the ItemStack
+                player.getItemCooldownManager().set(gauntletStack, 40);
+            }
+        } else {
+            player.sendMessage(Text.translatable("message.hextechmod.not_enough_power"), true);
         }
-
-        player.fallDistance = 0.0F;
-
-        // Calculate dash direction and apply velocity
-        Vec3d lookDir = player.getRotationVector();
-        player.setVelocity(
-                lookDir.x * dashDistance,
-                lookDir.y * dashDistance,
-                lookDir.z * dashDistance
-        );
-        player.velocityModified = true;
-
-        // Consume power and apply cooldown
-        if (!player.isCreative()) {
-            HextechPowerUtils.consumePower(gauntletStack, dashCost);
-            // Set cooldown using the Item from the ItemStack
-            player.getItemCooldownManager().set(gauntletStack, 40);
-        }
-
-        player.sendMessage(Text.translatable("message.hextechmod.gauntlets.dash"), true);
     }
 
     @Override
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-
-        // Check cooldown on current gauntlet
-        if (user.getItemCooldownManager().isCoolingDown(stack)) {
-            return ActionResult.FAIL;
-        }
-
-        if (!user.isCreative() && !HextechPowerUtils.hasPower(stack, 20)) {
-            user.sendMessage(Text.translatable("message.hextechmod.not_enough_power"), true);
-            return ActionResult.FAIL;
-        }
-
-        playerBlockingStates.put(user.getUuid(), true);
-        user.setCurrentHand(hand);
-        return ActionResult.CONSUME;
+        return GauntletBlockingHandler.handleUse(world, user, hand, stack);
     }
 
     @Override
     public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (!(user instanceof PlayerEntity player)) return false;
+        GauntletBlockingHandler.handleOnStoppedUsing(stack, world, user, remainingUseTicks);
+        // Removed super.onStoppedUsing
+        return false;
+    }
 
-        UUID playerId = player.getUuid();
-        playerBlockingStates.remove(playerId);
-
-        // Get actual blocking time from our tracking
-        Long startTime = playerBlockingStartTimes.remove(playerId);
-        if (startTime == null) return false;
-
-        int usedTime = (int)(world.getTime() - startTime);
-
-        // Apply cooldown only to the current gauntlet
-        int cooldownTicks = (usedTime >= MAX_USE_TIME) ? EXTENDED_COOLDOWN_TICKS : NORMAL_COOLDOWN_TICKS;
-        player.getItemCooldownManager().set(stack, cooldownTicks);
-
-        // Only show extended cooldown message if needed
-        if (usedTime >= MAX_USE_TIME) {
-            player.sendMessage(Text.translatable("message.hextechmod.gauntlets.extended_cooldown"), true);
-        }
-
-        return true;
+    @Override
+    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
+        GauntletBlockingHandler.handleUsageTick(world, user, stack, remainingUseTicks);
+        // Removed super.usageTick
     }
 
     @Override
@@ -224,76 +179,6 @@ public class AtlasGauntlets extends BowItem {
             target.damage(serverWorld, player.getDamageSources().generic(), this.attackDamage);
         }
         return true;
-    }
-
-    @Override
-    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        if (!(user instanceof PlayerEntity player)) return;
-
-        UUID playerId = player.getUuid();
-
-        // Record start time when player begins blocking
-        if (!playerBlockingStartTimes.containsKey(playerId) && player.isUsingItem() && player.getActiveItem() == stack) {
-            playerBlockingStartTimes.put(playerId, world.getTime());
-        }
-
-        // Calculate how long the player has been blocking
-        long startTime = playerBlockingStartTimes.getOrDefault(playerId, world.getTime());
-        int timeUsed = (int)(world.getTime() - startTime);
-
-        if (player.isUsingItem() && player.getActiveItem() == stack) {
-            // Check for time = 1 and prevent usage
-            if (timeUsed <= 1) {
-                return;
-            }
-
-            // Force stop if we exceed the absolute max time
-            if (timeUsed >= ABSOLUTE_MAX_USE_TIME) {
-                // Force stop blocking
-                player.stopUsingItem();
-                player.clearActiveItem();
-                playerBlockingStates.put(playerId, false);
-                playerBlockingStartTimes.remove(playerId);
-
-                if (!world.isClient) {
-                    // Apply extended cooldown only to this gauntlet
-                    player.getItemCooldownManager().set(stack, EXTENDED_COOLDOWN_TICKS);
-
-                    player.sendMessage(Text.translatable("message.hextechmod.gauntlets.max_blocking_time"), true);
-                    world.playSound(null, player.getX(), player.getY(), player.getZ(),
-                            SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, 0.6f, 1.2f);
-                }
-                return;
-            }
-
-            // Power consumption logic
-            if (!player.isCreative()) {
-                if (HextechPowerUtils.hasPower(stack, BLOCKING_POWER_COST_PER_TICK)) {
-                    HextechPowerUtils.consumePower(stack, BLOCKING_POWER_COST_PER_TICK);
-
-                    if (world instanceof ServerWorld serverWorld && world.getTime() % 2 == 0) {
-                        createShieldParticles(player, serverWorld);
-                    }
-                } else {
-                    player.sendMessage(Text.translatable("message.hextechmod.not_enough_power"), true);
-
-                    // Apply cooldown only to the active gauntlet
-                    player.getItemCooldownManager().set(stack, NORMAL_COOLDOWN_TICKS / 2);
-
-                    player.stopUsingItem();
-                    playerBlockingStates.put(playerId, false);
-                    playerBlockingStartTimes.remove(playerId);
-                    return;
-                }
-            }
-        } else {
-            // Player stopped using item
-            playerBlockingStartTimes.remove(playerId);
-        }
-    }
-    // Add helper method to check if a player is blocking
-    public static boolean isPlayerBlocking(PlayerEntity player) {
-        return playerBlockingStates.getOrDefault(player.getUuid(), false);
     }
 
     private void createShieldParticles(PlayerEntity player, ServerWorld serverWorld) {
@@ -414,10 +299,6 @@ public class AtlasGauntlets extends BowItem {
                 (player.getActiveItem().getItem() instanceof AtlasGauntlets);
     }
 
-    public boolean isBlocking() {
-        return blocking;
-    }
-
     public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
         return 1.0F; // Not efficient for mining
     }
@@ -441,5 +322,17 @@ public class AtlasGauntlets extends BowItem {
 
     public boolean isCorrectForDrops(ItemStack stack, BlockState state) {
         return true; // Implementation needed based on your requirements
+    }
+
+    public static boolean isBlocking(PlayerEntity player) {
+        return player.isUsingItem()
+               && player.getActiveItem().getItem() instanceof AtlasGauntlets;
+    }
+
+    /**
+     * Checks if the player is currently blocking with Atlas Gauntlets in either hand.
+     */
+    public static boolean isPlayerBlocking(PlayerEntity player) {
+        return isBlocking(player);
     }
 }

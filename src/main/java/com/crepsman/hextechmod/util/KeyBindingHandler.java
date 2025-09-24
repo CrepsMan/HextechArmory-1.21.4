@@ -36,7 +36,6 @@ public class KeyBindingHandler {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (empowerItemKey.wasPressed()) {
                 if (client.player != null) {
-                    HextechMod.LOGGER.info("Empower item key pressed");
                     ClientPlayNetworking.send(new PowerC2SPacket());
                 }
             }
